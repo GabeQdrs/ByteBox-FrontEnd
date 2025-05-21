@@ -1,27 +1,30 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
-
-export default function LoginScreen() {
+import { useNavigation } from '@react-navigation/native';
+export default function LoginScreen({navigation}) {
+  
   return (
     <SafeAreaView style={styles.container}>
-      {/* Cabeçalho */}
       <View style={styles.header}>
         <Image source={{ uri: 'https://flagcdn.com/w40/br.png' }} style={styles.flag} />
         <Text style={styles.title}>ByteBox</Text>
         <TouchableOpacity>
-          <Text style={styles.bell}>🔔</Text>
+        <Image
+           source={require('../../assets/iconesino.png')}
+          style={styles.flag}
+        />
         </TouchableOpacity>
       </View>
 
-      {/* Logo */}
+
       <View style={styles.logoContainer}>
         <Image
-           source={require('../../assets/logobyte.jpeg')}
+           source={require('../../assets/logobite.jpeg')}
           style={styles.logo}
         />
       </View>
 
-      {/* Formulário */}
+      
       <Text style={styles.loginTitle}>LOGIN</Text>
 
       <TextInput
@@ -40,14 +43,15 @@ export default function LoginScreen() {
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
-      {/* Links */}
+      
       <Text style={styles.signUpText}>Ainda não tem uma conta?</Text>
-      <TouchableOpacity>
+      <TouchableOpacity  onPress={() => navigation.navigate('Cadastro')}>
         <Text style={styles.link}>Cadastre-se</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity >
         <Text style={styles.visitorLink}>Entrar como visitante</Text>
+        
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -68,8 +72,8 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   flag: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
     borderRadius: 12,
   },
   title: {
@@ -131,6 +135,6 @@ const styles = StyleSheet.create({
   visitorLink: {
     color: '#fff',
     textDecorationLine: 'underline',
-    marginTop: 180,
+    marginTop: 100,
   },
 });

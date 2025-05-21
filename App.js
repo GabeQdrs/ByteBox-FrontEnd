@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Entrar'>
+      <Stack.Navigator initialRouteName='Entrar' >
         <Stack.Screen name='Entrar' component={LoginScreen}/>
         <Stack.Screen name='Cadastro' component={RegisterScreen}/>
         <Stack.Screen name='Inicio' component={HomeScreen}/>
@@ -27,7 +27,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#2b3e50',
     alignItems: 'center',
     justifyContent: 'center',
   },
