@@ -182,9 +182,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#fff',
+    marginTop: 20,
   },
   loginAnchor: {
     color: '#007BFF',
     textDecorationLine: 'underline',
+  },
+  link: {
+    color: '#87cefa',
+    textDecorationLine: 'underline',
+    marginBottom: 20,
+    textAlign:'center',
   },
 });
