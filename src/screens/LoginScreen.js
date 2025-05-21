@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2b3e50',
     alignItems: 'center',
-    paddingTop: 40,
+    paddingTop: 70,
   },
   header: {
     flexDirection: 'row',
@@ -135,6 +135,6 @@ const styles = StyleSheet.create({
   visitorLink: {
     color: '#fff',
     textDecorationLine: 'underline',
-    marginTop: 100,
+    marginTop: 160,
   },
 });

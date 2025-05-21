@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 
-export default function RegisterScreen() {
+export default function RegisterScreen({navigation}) {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
@@ -91,9 +91,13 @@ export default function RegisterScreen() {
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
 
-        <Text style={styles.loginLink}>
-          Já tem uma conta? <Text style={styles.loginAnchor}>Entre aqui</Text>
-        </Text>
+        
+         <Text style={styles.loginLink}>Ainda não tem uma conta?</Text>
+               <TouchableOpacity  onPress={() => navigation.navigate('Entrar')}>
+                 <Text style={styles.link}>Cadastre-se</Text>
+               </TouchableOpacity>
+         
+        
       </View>
     </View>
   );
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2b3e50',
-    padding: 20,
+    padding: 50,
   },
   flag: {
     width: 30,

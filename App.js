@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Entrar' >
+      <Stack.Navigator initialRouteName='Entrar'screenOptions={{ headerShown: false }} >
         <Stack.Screen name='Entrar' component={LoginScreen}/>
         <Stack.Screen name='Cadastro' component={RegisterScreen}/>
         <Stack.Screen name='Inicio' component={HomeScreen}/>
