@@ -1,32 +1,22 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 export default function LoginScreen({navigation}) {
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Image source={{ uri: 'https://flagcdn.com/w40/br.png' }} style={styles.flag} />
         <Text style={styles.title}>ByteBox</Text>
-        <TouchableOpacity>
-        <Image
-           source={require('../../assets/iconesino.png')}
-          style={styles.flag}
-        />
-        </TouchableOpacity>
       </View>
-
 
       <View style={styles.logoContainer}>
         <Image
-           source={require('../../assets/logobite.jpeg')}
+           source={require('../../assets/logobyte.png')}
           style={styles.logo}
         />
-      </View>
-
-      
+      </View>      
       <Text style={styles.loginTitle}>LOGIN</Text>
-
       <TextInput
         placeholder="Insira seu e-mail aqui"
         placeholderTextColor="#ccc"
@@ -63,10 +53,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#2b3e50',
     alignItems: 'center',
     paddingTop: 70,
+    
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '90%',
     alignItems: 'center',
     marginBottom: 100,
@@ -80,8 +71,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
+    
 
   },
+  
   bell: {
     fontSize: 22,
     color: '#fff',
@@ -102,6 +95,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 5,
+    
   },
   input: {
     backgroundColor: '#f0f8ff',
@@ -122,6 +116,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
     fontWeight: 'bold',
+    
   },
   signUpText: {
     color: '#fff',

@@ -33,18 +33,15 @@ export default function RegisterScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
-         <Image source={{ uri: 'https://flagcdn.com/w40/br.png' }} style={styles.flag} />
-        <Text style={styles.topBarTitle}>ByteBox</Text>
-         <Image
-                   source={require('../../assets/iconesino.png')}
-                  style={styles.flag}
-                />
+      <View style={styles.header}>
+         
+        <Text style={styles.headerTitle}>ByteBox</Text>
+        
       </View>
 
       <View style={styles.logoSection}>
          <Image
-                   source={require('../../assets/logobite.jpeg')}
+                   source={require('../../assets/logobyte.png')}
                   style={styles.logo}
                 />
         <Text style={styles.titulo}>CADASTRO</Text>
@@ -93,7 +90,7 @@ export default function RegisterScreen({navigation}) {
 
         
          <Text style={styles.loginLink}>Já tem uma conta?</Text>
-               <TouchableOpacity  onPress={() => navigation.navigate('Entrar')}>
+               <TouchableOpacity  onPress={() => navigation.navigate('Entrar')} >
                  <Text style={styles.link}>Faça o login</Text>
                </TouchableOpacity>
          
@@ -119,16 +116,17 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 100,
   },
-  topBar: {
+  header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
   },
-  topBarTitle: {
+  headerTitle: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#fff'
+    color: '#fff',
+    
+   
   },
   logoSection: {
     alignItems: 'center',
