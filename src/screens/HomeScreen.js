@@ -1,52 +1,24 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import {View,Text,Image,ScrollView,StyleSheet,TouchableOpacity,Dimensions,} from 'react-native';
 import ProductCard from '../components/ProductCard';
+import TopBar from '../components/TopBar';
+import SurpriseBox from '../components/SurpriseBox';
+
 const { width } = Dimensions.get('window');
 
 export default function App() {
   return (
     <View style={styles.wrapper}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Image source={{ uri: 'https://flagcdn.com/w40/br.png' }} style={styles.flag} />
-        <Text style={styles.topTitle}>ByteBox</Text>
-        <TouchableOpacity>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/512/1827/1827392.png',
-            }}
-            style={styles.topIcon}
-          />
-        </TouchableOpacity>
-      </View>
+    <TopBar />
 
       {/* Scrollable Content */}
       <ScrollView style={styles.container}>
 
-        {/* Box Surpresa */}
-        <View style={styles.surpriseBox}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/350x200' }}
-            style={styles.surpriseImage}
-          />
-          <View style={styles.surpriseOverlay}>
-            <Text style={styles.boxTitle}>Box Surpresa</Text>
-            <Text style={styles.boxSubtitle}>O que será que tem aqui?</Text>
-            <View style={styles.discountLabel}>
-              <Text style={styles.discountText}>-30%</Text>
-            </View>
-          </View>
-        </View>
+        {/* IMAGEM ANUNCIO */}
+        <SurpriseBox />
 
-        {/* Desconto por tempo limitado */}
+        {/* PRODUTO */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <ProductCard
         image="https://via.placeholder.com/100x140.png?text=FNAF"
@@ -54,18 +26,8 @@ export default function App() {
         title="Box FNAF"
         subtitle="Five Nights at Freddy's"
       />
-      <ProductCard
-        image="https://via.placeholder.com/100x140.png?text=Witcher"
-        discount="20% OFF"
-        title="Box The Witcher"
-        subtitle="Um bruxo que te encadeia"
-      />
-      <ProductCard
-        image="https://via.placeholder.com/100x140.png?text=Mitologia"
-        discount="70% OFF"
-        title="Box Mitologia"
-        subtitle="Deuses e monstros"
-      />
+     <ProductCard/>
+
     </ScrollView>
 
       
@@ -93,14 +55,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f7f7f7',
   },
-  topBar: {
-    height: 50,
-    backgroundColor: '#1e1e2f',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-  },
+  
   flag: {
     width: 24,
     height: 16,
