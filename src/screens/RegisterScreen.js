@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Image,
+  ScrollView,
 } from 'react-native';
 
 export default function RegisterScreen({navigation}) {
@@ -17,11 +18,26 @@ export default function RegisterScreen({navigation}) {
     confirmarSenha: '',
   });
 
+  const isEmailValid = (email) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+  };
+
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = () => {
+    if (!formData.nome || !formData.email || !formData.senha || !formData.confirmarSenha) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios!');
+      return;
+    }
+
+    if (!isEmailValid(formData.email)) {
+      Alert.alert('Erro', 'E-mail inválido!');
+      return;
+    }
+
     if (formData.senha !== formData.confirmarSenha) {
       Alert.alert('Erro', 'As senhas não coincidem!');
       return;
@@ -32,6 +48,7 @@ export default function RegisterScreen({navigation}) {
   };
 
   return (
+  <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <View style={styles.header}>
          
@@ -97,6 +114,7 @@ export default function RegisterScreen({navigation}) {
         
       </View>
     </View>
+  </ScrollView>
   );
 }
 
