@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 
 export default function LoginScreen({navigation}) {
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +33,7 @@ export default function LoginScreen({navigation}) {
         style={styles.input}
       />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Inicio')}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
