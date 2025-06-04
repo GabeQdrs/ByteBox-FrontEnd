@@ -58,7 +58,7 @@ export default function LoginScreen({navigation}) {
 
       
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Inicio')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppTabs', {screen:'Inicio'})}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
