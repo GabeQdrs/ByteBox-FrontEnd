@@ -1,31 +1,34 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity} from 'react-native';
 
 const ProductCard = ({ image, discount, title, subtitle }) => {
   return (
-    <View style={styles.card}>
+    
+    
+    <TouchableOpacity style={styles.card}>
       <View style={styles.discountBadge}>
         <Text style={styles.discountText}>{discount}</Text>
       </View>
       <Image source={{ uri: image }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
-    </View>
+    </TouchableOpacity >
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    
+    margin:10,
     borderWidth: 1,
     borderColor: '#c3d6e6',
     borderRadius: 10,
     backgroundColor: '#e4f1fc',
     padding: 8,
     alignItems: 'center',
-    marginRight: 12,
+    marginLeft:10,
     maxWidth:300,
     maxHeight:210
+    
   },
   image: {
     width: 100,

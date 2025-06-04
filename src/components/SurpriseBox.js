@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity } from 'react-native';
 
 const SurpriseBox = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://via.placeholder.com/400x220' }} 
+        source={{ uri: 'https://m.media-amazon.com/images/I/51qW7mL9stL._AC_UF1000,1000_QL80_.jpg' }} 
         style={styles.image}
         resizeMode="cover"
       />
-      <View style={styles.bottomContent}>
+      < TouchableOpacity style={styles.bottomContent}>
         <View>
           <Text style={styles.title}>| Box Surpresa</Text>
           <Text style={styles.subtitle}>O que sera que tem aqui??</Text>
@@ -17,16 +17,16 @@ const SurpriseBox = () => {
         <View style={styles.discountTag}>
           <Text style={styles.discountText}>-30%</Text>
         </View>
-      </View>
+       </TouchableOpacity >
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+    
     overflow: 'hidden',
-    margin: 16,
+    marginTop:5,
     backgroundColor: '#fff',
     elevation: 3, // para Android
     shadowColor: '#000', // para iOS

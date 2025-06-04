@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
       />
       <TextInput
         placeholder="Insira sua senha aqui"
-        placeholderTextColor="#ccc"
+        
         secureTextEntry
         style={styles.input}
       />
