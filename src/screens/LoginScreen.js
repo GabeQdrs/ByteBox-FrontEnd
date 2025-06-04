@@ -1,12 +1,26 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import React, { useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView,  } from 'react-native';
+import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function LoginScreen({navigation}) {
+  const [loaded, error] = useFonts ({
+    Lora_400Regular,
+    Lora_600SemiBold,
+    Lora_700Bold
+  });
 
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
 
-
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,18 +34,29 @@ export default function LoginScreen({navigation}) {
           style={styles.logo}
         />
       </View>      
+      
       <Text style={styles.loginTitle}>LOGIN</Text>
-      <TextInput
-        placeholder="Insira seu e-mail aqui"
-        placeholderTextColor="#ccc"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Insira sua senha aqui"
-        
-        secureTextEntry
-        style={styles.input}
-      />
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.textInput}>E-MAIL</Text>
+        <TextInput
+          placeholder="   Insira seu e-mail aqui"
+          placeholderTextColor={'#A5AAAB'}
+          style={styles.input}
+        />
+      </View>  
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.textInput}>SENHA</Text>
+        <TextInput
+          placeholder="   Insira sua senha aqui"
+          placeholderTextColor={'#A5AAAB'}
+          secureTextEntry
+          style={styles.input}
+        />
+      </View>
+
+      
 
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Inicio')}>
         <Text style={styles.buttonText}>Entrar</Text>
@@ -64,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
     alignItems: 'center',
-    marginBottom: 100,
+    marginBottom: 70,
   },
   flag: {
     width: 30,
@@ -73,10 +98,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    
-
+    fontSize: 24,
+    fontFamily: 'Lora_400Regular'
   },
   
   bell: {
@@ -85,7 +108,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 5,
   },
   logo: {
     width: 150,
@@ -94,46 +117,81 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     color: '#fff',
-    fontSize: 22,
-    marginBottom: 10,
+    fontSize: 40,
+    fontFamily: 'Lora_400Regular',
+    marginTop: 40,
+    marginBottom: 30,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 5,
-    
+    paddingHorizontal: 100,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    width: 390,
+    height: 50,
+    justifyContent: 'space-between',
+    marginVertical: 15,
+  },
+  textInput: {
+    backgroundColor: '#ECF0F1',
+    color: '#2C3E50',
+    fontFamily: 'Lora_700Bold',
+    fontSize: 15,
+    width: 81,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    borderTopLeftRadius: 18,
+    borderBottomLeftRadius: 18,
+    borderColor: '#A9CCE3',
+    borderBottomWidth: 4,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
   },
   input: {
-    backgroundColor: '#f0f8ff',
-    width: '85%',
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 10,
-    marginTop: 20,
+    backgroundColor: '#ECF0F1',
+    width: 304,
+    borderColor: '#A9CCE3',
+    borderTopRightRadius: 18,
+    borderBottomRightRadius: 18,
+    borderBottomWidth: 4,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+
   },
   button: {
     backgroundColor: '#b0d4f1',
-    paddingVertical: 15,
-    paddingHorizontal: 80,
-    borderRadius: 10,
+    width: 226,
+    height: 60,
+    borderRadius: 20,
     marginTop: 30,
+    justifyContent: 'center',
+    
   },
   buttonText: {
     color: '#000',
-    fontSize: 16,
-    fontWeight: 'bold',
-    
+    fontSize: 24,
+    fontFamily: 'Lora_600SemiBold',
+    textAlign: 'center',
   },
   signUpText: {
     color: '#fff',
     marginTop: 20,
+    fontSize: 15,
+    fontFamily: 'Lora_400Regular'
   },
   link: {
     color: '#87cefa',
     textDecorationLine: 'underline',
     marginBottom: 20,
+    fontSize: 15,
+    fontFamily: 'Lora_400Regular'
   },
   visitorLink: {
     color: '#fff',
     textDecorationLine: 'underline',
-    marginTop: 160,
+    marginTop: 100,
+    fontSize: 15,
+    fontFamily: 'Lora_400Regular'
   },
 });
