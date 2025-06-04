@@ -18,34 +18,45 @@ export default function App() {
         {/* IMAGEM ANUNCIO */}
         <SurpriseBox />
 
+        <Text style={styles.textPromo}>DESCONTOS IMPERTIVEIS</Text>
+
         {/* PRODUTO */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <ProductCard
-        image="https://via.placeholder.com/100x140.png?text=FNAF"
+        image="https://m.media-amazon.com/images/I/51qW7mL9stL._AC_UF1000,1000_QL80_.jpg?text=FNAF"
         discount="50% OFF"
-        title="Box FNAF"
-        subtitle="Five Nights at Freddy's"
+        title="Box Teste"
+        subtitle="Descrição teste"
       />
-     <ProductCard/>
+      <ProductCard/>
+      </ScrollView >
 
-    </ScrollView>
+     <Text style={styles.textPromo}>DESCONTOS IMPERTIVEIS</Text>
 
+      {/* LINHA 2 */}
+       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ProductCard/>
+      <ProductCard/>
+      </ScrollView >
+
+       <Text style={styles.textPromo}>DESCONTOS IMPERTIVEIS</Text>
+       
+      {/* LINHA 3 */}
+       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ProductCard/>
+      <ProductCard/>
+      </ScrollView >
       
+      
+      {/* LINHA 2 */}
+       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ProductCard/>
+      <ProductCard/>
+      </ScrollView >
+
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomBar}>
-        {['home', 'user', 'box', 'cart', 'menu'].map((icon, index) => (
-          <TouchableOpacity key={index}>
-            <Image
-              source={{
-                uri: `https://cdn-icons-png.flaticon.com/512/1828/1828${100 + index}.png`,
-              }}
-              style={styles.bottomIcon}
-            />
-          </TouchableOpacity>
-        ))}
-      </View>
+     
     </View>
   );
 }
@@ -56,6 +67,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   
+  textPromo:{
+    textDecorationLine: 'underline',
+    marginLeft:10,
+    marginTop:5,
+  },
   flag: {
     width: 24,
     height: 16,
