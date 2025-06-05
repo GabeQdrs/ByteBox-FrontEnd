@@ -11,11 +11,8 @@ const SurpriseBox = () => {
       />
       < TouchableOpacity style={styles.bottomContent}>
         <View>
-          <Text style={styles.title}>| Box Surpresa</Text>
-          <Text style={styles.subtitle}>O que sera que tem aqui??</Text>
-        </View>
-        <View style={styles.discountTag}>
-          <Text style={styles.discountText}>-30%</Text>
+          <Text style={styles.title}>TESTE</Text>
+          <Text style={styles.subtitle}>TESTE</Text>
         </View>
        </TouchableOpacity >
     </View>
@@ -26,7 +23,7 @@ const styles = StyleSheet.create({
   container: {
     
     overflow: 'hidden',
-    marginTop:5,
+    
     backgroundColor: '#fff',
     elevation: 3, // para Android
     shadowColor: '#000', // para iOS
@@ -53,17 +50,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 13,
     color: '#333',
-  },
-  discountTag: {
-    backgroundColor: '#e53935',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-  },
-  discountText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
 });
 

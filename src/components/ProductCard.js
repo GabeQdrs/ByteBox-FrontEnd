@@ -6,9 +6,6 @@ const ProductCard = ({ image, discount, title, subtitle }) => {
     
     
     <TouchableOpacity style={styles.card}>
-      <View style={styles.discountBadge}>
-        <Text style={styles.discountText}>{discount}</Text>
-      </View>
       <Image source={{ uri: image }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
@@ -35,21 +32,6 @@ const styles = StyleSheet.create({
     height: 140,
     borderRadius: 6,
     resizeMode: 'cover',
-  },
-  discountBadge: {
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    backgroundColor: '#e53935',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    zIndex: 1,
-  },
-  discountText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 12,
   },
   title: {
     fontWeight: 'bold',
