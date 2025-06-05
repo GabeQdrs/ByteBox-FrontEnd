@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView,  } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -24,6 +24,7 @@ export default function LoginScreen({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
+
       <View style={styles.header}>
         <Text style={styles.title}>ByteBox</Text>
       </View>
@@ -40,7 +41,7 @@ export default function LoginScreen({navigation}) {
       <View style={styles.inputContainer}>
         <Text style={styles.textInput}>E-MAIL</Text>
         <TextInput
-          placeholder="   Insira seu e-mail aqui"
+          placeholder="Insira seu e-mail aqui"
           placeholderTextColor={'#A5AAAB'}
           style={styles.input}
         />
@@ -49,14 +50,12 @@ export default function LoginScreen({navigation}) {
       <View style={styles.inputContainer}>
         <Text style={styles.textInput}>SENHA</Text>
         <TextInput
-          placeholder="   Insira sua senha aqui"
+          placeholder="Insira sua senha aqui"
           placeholderTextColor={'#A5AAAB'}
           secureTextEntry
           style={styles.input}
         />
       </View>
-
-      
 
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppTabs', {screen:'Inicio'})}>
         <Text style={styles.buttonText}>Entrar</Text>
@@ -68,10 +67,10 @@ export default function LoginScreen({navigation}) {
         <Text style={styles.link}>Cadastre-se</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity >
+      {/* <TouchableOpacity >
         <Text style={styles.visitorLink}>Entrar como visitante</Text>
+      </TouchableOpacity> */}
         
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2b3e50',
     alignItems: 'center',
-    paddingTop: 70,
+    paddingTop: 40,
     
   },
   header: {
@@ -89,7 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
     alignItems: 'center',
-    marginBottom: 70,
+    marginBottom: 50,
   },
   flag: {
     width: 30,
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   title: {
-    color: '#fff',
+    color: '#ECF0F1',
     fontSize: 24,
     fontFamily: 'Lora_400Regular'
   },
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   loginTitle: {
-    color: '#fff',
+    color: '#ECF0F1',
     fontSize: 40,
     fontFamily: 'Lora_400Regular',
     marginTop: 40,
@@ -151,13 +150,13 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#ECF0F1',
     width: 304,
+    paddingHorizontal:10,
     borderColor: '#A9CCE3',
     borderTopRightRadius: 18,
     borderBottomRightRadius: 18,
     borderBottomWidth: 4,
     borderTopWidth: 4,
     borderRightWidth: 4,
-
   },
   button: {
     backgroundColor: '#b0d4f1',
@@ -166,10 +165,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 30,
     justifyContent: 'center',
-    
   },
   buttonText: {
-    color: '#000',
+    color: '#2b3e50',
     fontSize: 24,
     fontFamily: 'Lora_600SemiBold',
     textAlign: 'center',
@@ -187,11 +185,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Lora_400Regular'
   },
-  visitorLink: {
-    color: '#fff',
-    textDecorationLine: 'underline',
-    marginTop: 100,
-    fontSize: 15,
-    fontFamily: 'Lora_400Regular'
-  },
+  // visitorLink: {
+  //   color: '#fff',
+  //   textDecorationLine: 'underline',
+  //   marginTop: 100,
+  //   fontSize: 15,
+  //   fontFamily: 'Lora_400Regular'
+  // },
 });

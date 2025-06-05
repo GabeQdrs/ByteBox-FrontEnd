@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,10 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RegisterScreen({navigation}) {
   const [formData, setFormData] = useState({
@@ -17,6 +21,21 @@ export default function RegisterScreen({navigation}) {
     senha: '',
     confirmarSenha: '',
   });
+  const [loaded, error] = useFonts ({
+    Lora_400Regular,
+    Lora_600SemiBold,
+    Lora_700Bold
+  }); 
+  
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+  
+  if (!loaded && !error) {
+    return null;
+  }    
 
   const isEmailValid = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,13 +66,13 @@ export default function RegisterScreen({navigation}) {
     Alert.alert('Sucesso', 'Cadastro realizado!');
   };
 
+
+
   return (
   <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <View style={styles.header}>
-         
         <Text style={styles.headerTitle}>ByteBox</Text>
-        
       </View>
 
       <View style={styles.logoSection}>
@@ -61,11 +80,11 @@ export default function RegisterScreen({navigation}) {
                    source={require('../../assets/logobyte.png')}
                   style={styles.logo}
                 />
-        <Text style={styles.titulo}>CADASTRO</Text>
-        <View style={styles.divider} />
       </View>
+      <Text style={styles.titulo}>CADASTRO</Text>
 
       <View style={styles.form}>
+        
         <Text style={styles.label}>NOME</Text>
         <TextInput
           style={styles.input}
@@ -101,6 +120,9 @@ export default function RegisterScreen({navigation}) {
           onChangeText={(value) => handleChange('confirmarSenha', value)}
         />
 
+         
+        
+      </View>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
@@ -110,9 +132,6 @@ export default function RegisterScreen({navigation}) {
                <TouchableOpacity  onPress={() => navigation.navigate('Entrar')} >
                  <Text style={styles.link}>Faça o login</Text>
                </TouchableOpacity>
-         
-        
-      </View>
     </View>
   </ScrollView>
   );
@@ -121,7 +140,7 @@ export default function RegisterScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2b3e50',
+    backgroundColor: '#2C3E50',
     padding: 50,
   },
   flag: {
@@ -140,11 +159,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#fff',
-    
-   
+    fontFamily: 'Lora_400Regular',
+    fontSize: 24,
+    color: '#ECF0F1', 
   },
   logoSection: {
     alignItems: 'center',
@@ -154,10 +171,15 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 40,
+    fontFamily: 'Lora_400Regular',
     marginTop: 10,
-    color: '#fff',
+    color: '#ECF0F1',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingBottom: 5,
+    paddingHorizontal: 40,
+    marginBottom: 15,
   },
   divider: {
     height: 2,
@@ -166,47 +188,51 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   form: {
-    gap: 15,
+    gap: 10,
   },
   label: {
-    fontSize: 14,
+    fontSize: 15,
     marginTop: 10,
-    fontWeight: 'bold',
+    marginLeft: 10,
+    fontFamily: 'Lora_600SemiBold',
     color: '#fff',
   },
   input: {
-     backgroundColor: '#f0f8ff',
-    borderWidth: 1,
-    borderColor: '#ffff',
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
+    backgroundColor: '#ECF0F1',
+    width: 304,
+    paddingHorizontal:10,
+    borderColor: '#A9CCE3',
+    borderRadius: 18,
+    borderWidth: 4,
   },
   button: {
-    marginTop: 20,
     backgroundColor: '#b0d4f1',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
+    width: 226,
+    height: 60,
+    borderRadius: 20,
+    marginTop: 30,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   buttonText: {
-    color: '#000',
-    fontWeight: 'bold',
+    color: '#2C3E50',
+    fontSize: 24,
+    fontFamily: 'Lora_600SemiBold',
+    textAlign: 'center',
   },
   loginLink: {
     marginTop: 20,
     textAlign: 'center',
     fontSize: 14,
-    color: '#fff',
-    marginTop: 20,
-  },
-  loginAnchor: {
-    color: '#007BFF',
-    textDecorationLine: 'underline',
+    fontFamily: 'Lora_400Regular',
+    fontSize: 15,
+    color: '#ECF0F1',
   },
   link: {
     color: '#87cefa',
     textDecorationLine: 'underline',
+    fontFamily: 'Lora_400Regular',
+    fontSize: 15,
     marginBottom: 20,
     textAlign:'center',
   },
