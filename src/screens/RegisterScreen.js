@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,7 +71,7 @@ export default function RegisterScreen({navigation}) {
 
   return (
   <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>ByteBox</Text>
       </View>
@@ -120,19 +121,17 @@ export default function RegisterScreen({navigation}) {
           onChangeText={(value) => handleChange('confirmarSenha', value)}
         />
 
-         
-        
       </View>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
 
         
-         <Text style={styles.loginLink}>Já tem uma conta?</Text>
-               <TouchableOpacity  onPress={() => navigation.navigate('Entrar')} >
-                 <Text style={styles.link}>Faça o login</Text>
-               </TouchableOpacity>
-    </View>
+        <Text style={styles.loginLink}>Já tem uma conta?</Text>
+        <TouchableOpacity  onPress={() => navigation.navigate('Entrar')} >
+        <Text style={styles.link}>Faça o login</Text>
+        </TouchableOpacity>
+    </SafeAreaView>
   </ScrollView>
   );
 }
@@ -140,8 +139,9 @@ export default function RegisterScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2C3E50',
-    padding: 50,
+    backgroundColor: '#2b3e50',
+    alignItems: 'center',
+    paddingTop: 40,
   },
   flag: {
     width: 30,
@@ -235,5 +235,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 20,
     textAlign:'center',
+    paddingBottom: 40,
   },
 });

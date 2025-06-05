@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -11,12 +11,54 @@ import CartScreen from './src/screens/CartScreen';
 import SearchScreen from './src/screens/SearchScreen';
 
 
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MainAppTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false}}>
+    <Tab.Navigator
+     screenOptions={ ({ route }) => ({
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarActiveTintColor: '#2b3e50',
+      tabBarInactiveTintColor: '#ECF0F1',
+
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconSource;
+
+        if (route.name === 'Inicio') {
+          iconSource = require('./assets/icons/home.png');
+        } else if (route.name === 'Perfil') {
+          iconSource = require('./assets/icons/profile.png');
+        } else if (route.name === 'Carrinho') {
+          iconSource = require('./assets/icons/cart.png')
+        } else if (route.name === 'Pesquisar') {
+          iconSource = require('./assets/icons/search.png')
+        }
+        return ( 
+        <View style={{
+          backgroundColor: focused ? '#ECF0F1' : '#2b3e50',  
+          width: 105,
+          height: 65,
+          alignItems: 'center',
+          justifyContent: 'center',
+          }}>
+          <Image
+            source={iconSource}
+            style={{tintColor: color}}
+            />
+        </View>
+        )
+      },
+      tabBarStyle: {
+        backgroundColor: '#2b3e50',
+        paddingTop: 14,
+        height: 80,
+      }
+    })
+    }>
+
       <Stack.Screen name='Inicio' component={HomeScreen}/>
       <Stack.Screen name='Perfil' component={ProfileScreen}/>
       <Stack.Screen name='Carrinho' component={CartScreen}/>
