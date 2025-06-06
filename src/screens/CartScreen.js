@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import TopBar from '../components/TopBar';
+import CustomHeader from '../components/CustomHeader';
 
 const { width } = Dimensions.get('window');
 
@@ -55,7 +55,7 @@ export default function CartScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <TopBar />
+      <CustomHeader />
 
       <ScrollView style={styles.container}>
 
@@ -138,9 +138,10 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#2b3e50',
+    height: 100,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingHorizontal: 16,
     alignItems: 'center',
   },
   footerText: {

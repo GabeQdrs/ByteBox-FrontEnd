@@ -9,6 +9,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CartScreen from './src/screens/CartScreen';
 import SearchScreen from './src/screens/SearchScreen';
+import CurrencyContext, { CurrencyProvider } from './src/contexts/CurrencyContext';
 
 
 
@@ -69,14 +70,17 @@ function MainAppTabs() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Entrar'screenOptions={{ headerShown: false }} >
-        <Stack.Screen name='Entrar' component={LoginScreen}/>
-        <Stack.Screen name='Cadastro' component={RegisterScreen}/>
-        <Stack.Screen name='Produto' component={ProductScreen}/>
-        <Stack.Screen name='AppTabs' component={MainAppTabs}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <CurrencyProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Entrar'screenOptions={{ headerShown: false }} >
+          <Stack.Screen name='Entrar' component={LoginScreen}/>
+          <Stack.Screen name='Cadastro' component={RegisterScreen}/>
+          <Stack.Screen name='Produto' component={ProductScreen}/>
+          <Stack.Screen name='AppTabs' component={MainAppTabs}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CurrencyProvider>
+
   );
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {View,Text,Image,ScrollView,StyleSheet,TouchableOpacity,Dimensions,} from 'react-native';
 import ProductCard from '../components/ProductCard';
-import TopBar from '../components/TopBar';
 import SurpriseBox from '../components/SurpriseBox';
+import CustomHeader from '../components/CustomHeader';
 
 const { width } = Dimensions.get('window');
 
@@ -10,7 +10,7 @@ export default function App() {
   return (
     <View style={styles.wrapper}>
       {/* Top Bar */}
-    <TopBar />
+    <CustomHeader />
 
       {/* Scrollable Content */}
       <ScrollView style={styles.container}>
