@@ -85,7 +85,7 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#F5E3E6',
+    backgroundColor: '#fffff',
   },
   header: {
     flexDirection: 'row',
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   footer: {
-    backgroundColor: '#2B2239',
+    backgroundColor: '#2b3e50',
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
@@ -148,13 +148,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   buyButton: {
-    backgroundColor: '#BFAED9',
+    backgroundColor: '#b0d4f1',
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   buyButtonText: {
-    color: '#000',
+    color: '#2b3e50',
     fontWeight: 'bold',
   },
 });
