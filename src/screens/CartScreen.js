@@ -31,14 +31,14 @@ const productsData = [
 export default function CartScreen() {
   const [selectedItems, setSelectedItems] = useState(['1', '2']);
 
-  /* Marcar ou desmarcar produtos */
+  /* MARCAR OU DESMARCAR PRODUTOS - NÃO ESTÁ FUNCIONANDO */
   const toggleItem = (id) => {
     setSelectedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  /* Calcular total */
+  /* CALCULAR O TOTAL */
   const total = productsData
     .filter((item) => selectedItems.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
@@ -55,10 +55,8 @@ export default function CartScreen() {
 
   return (
     <View style={styles.wrapper}>
-      {/* Top Bar */}
       <TopBar />
 
-      {/* Conteúdo principal com ScrollView */}
       <ScrollView style={styles.container}>
 
         {/* Lista de produtos */}
