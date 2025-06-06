@@ -9,6 +9,11 @@ import {
   Dimensions,
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
+import RenderItem from '..components/RenderItem';
+import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 const { width } = Dimensions.get('window');
 
@@ -31,6 +36,12 @@ const productsData = [
 export default function CartScreen() {
   const [selectedItems, setSelectedItems] = useState(['1', '2']);
 
+   const [loaded, error] = useFonts ({
+      Lora_400Regular,
+      Lora_600SemiBold,
+      Lora_700Bold
+    });
+
   /* MARCAR OU DESMARCAR PRODUTOS - NÃO ESTÁ FUNCIONANDO */
   const toggleItem = (id) => {
     setSelectedItems((prev) =>
@@ -43,15 +54,7 @@ export default function CartScreen() {
     .filter((item) => selectedItems.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.productCard}>
-      <View style={styles.productDetails}>
-        <Text style={styles.productTitle}>{item.title}</Text>
-        <Text style={styles.productSubtitle}>{item.subtitle}</Text>
-        <Text style={styles.productPrice}>R$ {item.price.toFixed(2)}</Text>
-      </View>
-    </View>
-  );
+  
 
   return (
     <View style={styles.wrapper}>
@@ -62,7 +65,6 @@ export default function CartScreen() {
         {/* Lista de produtos */}
         <FlatList
           data={productsData}
-          renderItem={renderItem}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
         />
