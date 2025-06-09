@@ -9,9 +9,11 @@ import {
   Dimensions,
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
-import RenderItem from '..components/RenderItem';
+import RenderItem from '../components/RenderItem';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,12 +26,14 @@ const productsData = [
     title: 'Livro 1',
     subtitle: 'Descrição Livro 1',
     price: 69.9,
+    image: 'https://br.freepik.com/fotos-vetores-gratis/livros-png',
   },
   {
     id: '2',
     title: 'Livro 2',
     subtitle: 'Descrição Livro 2',
     price: 69.9,
+    image: 'https://br.freepik.com/fotos-vetores-gratis/livros-png',
   },
 ];
 
@@ -67,6 +71,13 @@ export default function CartScreen() {
           data={productsData}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
+          renderItem={({ item }) => (
+            <RenderItem
+              item={item}
+              selected={selectedItems.includes(item.id)}
+              onPress={() => toggleItem(item.id)}
+            />
+          )}
         />
       </ScrollView>
 
