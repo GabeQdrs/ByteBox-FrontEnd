@@ -1,49 +1,75 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet,TouchableOpacity} from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, StyleSheet,TouchableOpacity, ImageBackground} from 'react-native';
+import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import * as SplashScreen from 'expo-splash-screen';
 
-const ProductCard = ({ image, discount, title, subtitle }) => {
+
+SplashScreen.preventAutoHideAsync();
+
+const ProductCard = ({ product, onPress }) => {
+  const [loaded, error] = useFonts ({
+      Lora_400Regular,
+      Lora_600SemiBold,
+      Lora_700Bold
+    });
+  
+    useEffect(() => {
+      if (loaded || error) {
+        SplashScreen.hideAsync();
+      }
+    }, [loaded, error]);
+  
+    if (!loaded && !error) {
+      return null;
+    }
+
   return (
     
     
-    <TouchableOpacity style={styles.card}>
-      <Image source={{ uri: image }} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <Image source={{uri: "https://placehold.co/140x190/png"}} style={styles.image} />
+      <Text style={styles.title}>{product.theme}</Text>
+      <Text style={styles.price}>{product.price}</Text>
+
     </TouchableOpacity >
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    margin:10,
-    borderWidth: 1,
-    borderColor: '#c3d6e6',
-    borderRadius: 10,
-    backgroundColor: '#e4f1fc',
-    padding: 8,
+  container: {
+    backgroundColor: '#A9CCE3',
+    width: 160,
+    height: 250,
+    marginHorizontal: 10,
+    borderRadius: 18,
     alignItems: 'center',
-    marginLeft:10,
-    maxWidth:300,
-    maxHeight:210
-    
+    justifyContent: 'center',
+    padding: 7,
   },
   image: {
-    width: 100,
-    height: 140,
-    borderRadius: 6,
+    flex: 1,
+    width:140,
+    height:190,
+    alignItems: 'center',
+    justifyContent: 'center',
     resizeMode: 'cover',
+    borderRadius: 18,
+
   },
   title: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    marginTop: 8,
-    color: '#000',
+    color: '#2b3e50',
+    fontFamily: 'Lora_600SemiBold',
     textAlign: 'center',
+    marginHorizontal: 5,
+    marginTop: 5,
+    fontSize: 14
+    
   },
-  subtitle: {
-    fontSize: 12,
-    color: '#333',
-    textAlign: 'center',
+  price: {
+    color: '#2b3e50',
+    fontFamily: 'Lora_400Regular',
+    textAlign: 'right',
+    marginBottom: 2,
   },
 });
 

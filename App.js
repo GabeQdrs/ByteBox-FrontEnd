@@ -9,8 +9,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CartScreen from './src/screens/CartScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import CurrencyContext, { CurrencyProvider } from './src/contexts/CurrencyContext';
-
+import { CurrencyProvider } from './src/contexts/CurrencyContext';
 
 
 const Stack = createNativeStackNavigator();
@@ -92,3 +91,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+// CORES DO APP
+// AZUL ESCURO: #2b3e50
+// AZUL CLARO: #A9CCE3
+// BRANCO: #ECF0F1
