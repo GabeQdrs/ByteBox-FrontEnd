@@ -15,7 +15,7 @@ export default function App({ navigation}) {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://10.0.1.111:8765/products"
+        "http://10.0.0.106:8765/products"
       );
       setProduct(response.data);
     } catch (error) {

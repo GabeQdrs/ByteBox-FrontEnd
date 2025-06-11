@@ -25,8 +25,8 @@ const productsData = [
     id: '1',
     title: 'Livro 1',
     subtitle: 'Descrição Livro 1',
-    price: 69.9,
-    image: 'https://br.freepik.com/fotos-vetores-gratis/livros-png',
+    price: 100.9,
+    
   },
   {
     id: '2',
@@ -80,6 +80,10 @@ export default function CartScreen() {
           )}
         />
       </ScrollView>
+
+
+
+
 
       {/* Footer */}
       <View style={styles.footer}>
