@@ -1,16 +1,18 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { TextInput } from 'react-native-web'
 
-export default function InputBar({ text }) {
+const SignaturesScreen = () => {
   return (
-    <View styles={styles.container}>
-
+    <View>
+      <Text>SignaturesScreen</Text>
     </View>
   )
 }
+
 const styles = StyleSheet.create({
     container: {
-      
+
     }
 })
+
+export default SignaturesScreen
