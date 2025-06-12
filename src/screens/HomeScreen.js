@@ -3,7 +3,7 @@ import {View,Text,Image,ScrollView,StyleSheet,TouchableOpacity,Dimensions, FlatL
 import ProductCard from '../components/ProductCard';
 import SurpriseBox from '../components/SurpriseBox';
 import CustomHeader from '../components/CustomHeader';
-import axios from 'axios';
+import { getProducts } from '../services/ProductService';
 
 const { width } = Dimensions.get('window');
 
@@ -11,23 +11,20 @@ export default function App({ navigation}) {
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  async function fecthProducts() {
+  const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        "http://10.1.204.62:8765/products"
-      );
-      setProduct(response.data);
+      const data = await getProducts();
+      setProduct(data);
     } catch (error) {
-      console.log(error);
+      setError("Não foi possível carregar os produtos.")
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fecthProducts();
-    // console.log(products);
+    fetchProducts();
   }, []);
 
   if (loading) { 
