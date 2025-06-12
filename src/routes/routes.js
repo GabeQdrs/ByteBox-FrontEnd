@@ -42,7 +42,7 @@ export default function Routes() {
             <View style={{
               backgroundColor: focused ? '#ECF0F1' : '#2b3e50',  
               width: 105,
-              height: 65,
+              height: 70,
               alignItems: 'center',
               justifyContent: 'center',
               }}>
