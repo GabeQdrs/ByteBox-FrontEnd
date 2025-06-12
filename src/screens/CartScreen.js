@@ -46,7 +46,7 @@ export default function CartScreen() {
       Lora_700Bold
     });
 
-  /* MARCAR OU DESMARCAR PRODUTOS - NÃO ESTÁ FUNCIONANDO */
+  /* MARCAR OU DESMARCAR PRODUTOS */
   const toggleItem = (id) => {
     setSelectedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -57,6 +57,7 @@ export default function CartScreen() {
   const total = productsData
     .filter((item) => selectedItems.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
+    
 
   
 
