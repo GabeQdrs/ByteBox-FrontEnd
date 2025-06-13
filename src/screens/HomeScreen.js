@@ -4,12 +4,14 @@ import ProductCard from '../components/ProductCard';
 import SurpriseBox from '../components/SurpriseBox';
 import CustomHeader from '../components/CustomHeader';
 import { getProducts } from '../services/ProductService';
+import { useIsFocused } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 export default function App({ navigation}) {
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
+  const isFocused = useIsFocused();
 
   const fetchProducts = async () => {
     try {
@@ -24,8 +26,10 @@ export default function App({ navigation}) {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (isFocused) {
+      fetchProducts();
+    }
+  }, [isFocused]);
 
   if (loading) { 
         return <ActivityIndicator size={"large"}/>
@@ -50,7 +54,7 @@ export default function App({ navigation}) {
             product={item}
             onPress={() => 
               navigation.navigate('Produto', {
-                product: {...item, id:item}
+                product: item
               })
             }
           />

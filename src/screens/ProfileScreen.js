@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { StyleSheet } from 'react-native'
+
 import ProfileInfo from '../components/ProfileInfo'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomHeader from '../components/CustomHeader'
