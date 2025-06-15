@@ -13,12 +13,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { getSearchProducts } from '../services/ProductService'; // Ajuste o caminho conforme seu projeto
 import ProductCard from '../components/ProductCard';
 import CustomHeader from '../components/CustomHeader';
+import { useNavigation } from '@react-navigation/native';
 
 const SearchScreen = () => {
   const [searchInput, setSearchInput] = useState('');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigation = useNavigation();
 
   const handleSearch = async () => {
     if (!searchInput.trim()) return;
