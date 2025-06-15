@@ -24,3 +24,11 @@ export async function setFavorite(productId, newFavoriteStatus) {
     throw error;
   }
 }
+export async function getSearchProducts(searchInput) {
+  try {
+    const response = await api.get(`products/search/${searchInput}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
