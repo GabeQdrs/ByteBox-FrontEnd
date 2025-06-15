@@ -10,7 +10,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getSearchProducts } from '../services/ProductService'; // Ajuste o caminho conforme seu projeto
+import { getSearchProducts } from '../services/ProductService';
 import ProductCard from '../components/ProductCard';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
@@ -24,14 +24,19 @@ const SearchScreen = () => {
 
   const handleSearch = async () => {
     if (!searchInput.trim()) return;
-    
+
     setLoading(true);
     setError('');
+    setProducts([]); // Limpa os resultados anteriores
     Keyboard.dismiss();
 
     try {
       const result = await getSearchProducts(searchInput);
-      setProducts(result);
+      if (result.length === 0) {
+        setError('Nenhum produto encontrado.');
+      } else {
+        setProducts(result);
+      }
     } catch (err) {
       setError('Erro ao buscar produtos.');
     } finally {
@@ -39,16 +44,9 @@ const SearchScreen = () => {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.description}>{item.description}</Text>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-       <CustomHeader />
+      <CustomHeader />
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
@@ -63,25 +61,30 @@ const SearchScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {loading ? (
+      {loading && (
         <ActivityIndicator size="large" color="#000" style={styles.loader} />
-      ) : error ? (
+      )}
+
+      {!loading && error ? (
         <Text style={styles.error}>{error}</Text>
-      ) : (
+      ) : null}
+
+      {!loading && products.length > 0 && (
         <FlatList
           data={products}
           keyExtractor={(item) => item.id.toString()}
-           renderItem={({item}) => (
-                    <ProductCard
-                      product={item}
-                      onPress={() => 
-                        navigation.navigate('Produto', {
-                          product: item
-                        })
-                      }
-                    />
-                  )}
-          
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              onPress={() =>
+                navigation.navigate('Produto', {
+                  product: item,
+                })
+              }
+            />
+          )}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
         />
       )}
     </View>
@@ -91,7 +94,7 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ECF0F1'
+    backgroundColor: '#ECF0F1',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -101,6 +104,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     borderColor: '#ccc',
+    marginTop: 10,
   },
   input: {
     flex: 1,
@@ -135,6 +139,12 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+    fontSize: 16,
+  },
+  row: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingTop: 15,
   },
 });
 
