@@ -11,10 +11,16 @@ export default function ProductScreen({ route }) {
   const { product } = route.params;
 
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
       <CustomHeader/>
       <ProductHeader product={product}/>
       <ProductContent product={product}/>
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+  }
+})
