@@ -32,3 +32,14 @@ export async function getSearchProducts(searchInput) {
     throw error;
   }
 }
+
+export async function getFavorites() {
+  try {
+    const response = await api.get("products/favorites");
+    const products = response.data;
+    return products;
+  } catch (error) {
+    console.error("Erro ao buscar favoritos: " + error);
+    throw error;
+  }
+}
