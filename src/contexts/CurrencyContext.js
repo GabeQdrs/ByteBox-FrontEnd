@@ -3,14 +3,20 @@ import React, { createContext, useState} from "react";
 const CurrencyContext = createContext();
 
 export function CurrencyProvider  ({ children }) {
-    const [currency, setCurrency] = useState('usa');
+    const [currency, setCurrency] = useState('BRL');
 
-    // função para mudar a currency que o header vai usar
     const changeCurrency = () => {
-        setCurrency( currentCurrency => (currentCurrency === 'usa' ? 'brl' : 'usa'));
+        setCurrency( currentCurrency => {
+            if (currentCurrency === 'BRL') {
+                return 'USD';
+            } else if (currentCurrency === 'USD') {
+                return 'EUR';
+            } else {
+                return 'BRL';
+            }
+        });
     };
 
-    // o valor que vai ser compartilhado com os componentes
     const value = {currency, changeCurrency};
 
     return (

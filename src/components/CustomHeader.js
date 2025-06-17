@@ -6,8 +6,9 @@ import CurrencyContext from '../contexts/CurrencyContext';
 
 SplashScreen.preventAutoHideAsync();
 
-const brazilFlag = require('../../assets/brFlag.png');
-const usaFlag = require('../../assets/usFlag.png');
+const brazilFlag = require('../../assets/flags/brFlag.png');
+const usaFlag = require('../../assets/flags/usFlag.png');
+const germanyFlag = require('../../assets/flags/gerFlag.png');
 
 const CustomHeader = () => {
   const { currency, changeCurrency } = useContext(CurrencyContext);
@@ -28,24 +29,23 @@ const CustomHeader = () => {
       return null;
     }
 
-    let currencyText; 
-    const getCurrencyText = () => {
-      if (currency === 'usa')
-        currencyText = 'US$'
-      else if (currency === 'brl')
-        currencyText = 'R$'
+    const getFlagSource = () => {
+      if (currency === 'USD') {
+        return usaFlag;
+      } else if (currency === 'EUR') {
+        return germanyFlag;
+      }
+      return brazilFlag; // padrão
     }
-    getCurrencyText();
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>ByteBox</Text>
-      <TouchableOpacity style={styles.flagButton} onPress={changeCurrency}>
+      <TouchableOpacity  onPress={changeCurrency}>
         <Image 
         style={styles.flag}
-        source={currency === 'usa' ? usaFlag : brazilFlag}
+        source={getFlagSource()}
         />
-        {/* <Text style={styles.currencyText}>{currencyText}</Text> */}
       </TouchableOpacity>
     </View>
   );
@@ -60,36 +60,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBlock: 17,
     paddingHorizontal: 25,
-    elevation: 4,
-    shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-
   },
   text: {
     color: '#ECF0F1',
     fontFamily: 'Lora_600SemiBold',
     fontSize: 24,
   },
-  // flagButton: {
-  //   backgroundColor: '#ECF0F1',
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   borderRadius: 15,
-  //   width: 70,
-  //   alignItems: 'center',
-  // },
-  // currencyText: {
-  //   fontFamily: 'Lora_600SemiBold',
-  //   fontSize: 13,
-  //   marginRight: 5,
-  // },
   flag: {
     borderRadius: 10,
+    width: 40,
+    height: 30,
   }
 
 });

@@ -8,11 +8,9 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import CustomHeader from '../components/CustomHeader';
 import FavoriteItem from '../components/FavoriteItem';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFavorites, setFavorite } from '../services/ProductService';
 
 

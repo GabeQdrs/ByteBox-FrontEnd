@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {View,Text,Image,ScrollView,StyleSheet,TouchableOpacity,Dimensions, FlatList, ActivityIndicator} from 'react-native';
 import ProductCard from '../components/ProductCard';
 import SurpriseBox from '../components/SurpriseBox';
 import CustomHeader from '../components/CustomHeader';
 import { getProducts } from '../services/ProductService';
 import { useIsFocused } from '@react-navigation/native';
+import CurrencyContext from '../contexts/CurrencyContext';
+
 
 const { width } = Dimensions.get('window');
 
 export default function App({ navigation}) {
+  const { currency, changeCurrency } = useContext(CurrencyContext);
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const isFocused = useIsFocused();
@@ -16,7 +19,7 @@ export default function App({ navigation}) {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await getProducts();
+      const data = await getProducts(currency);
       setProduct(data);
     } catch (error) {
       setError("Não foi possível carregar os produtos.")

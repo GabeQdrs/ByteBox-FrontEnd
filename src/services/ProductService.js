@@ -1,8 +1,8 @@
 import api from "./api";
 
-export async function getProducts() {
+export async function getProducts(currency) {
     try {
-        const response = await api.get("products")
+        const response = await api.get(`products/${currency}`)
         return response.data;
     } catch (error) {
       console.log("Erro ao buscar produto" + error);
