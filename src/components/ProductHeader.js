@@ -22,13 +22,14 @@ const ProductHeader = ({ product }) => {
           return null;
         }
 
+
   return (
     <View style={styles.container}>
       <View>
       <Text style={styles.title}>{product.theme}</Text>
       <Text style={styles.quantity}>Livros incluso: {product.quantity}</Text>
       </View>
-      <Text style={styles.price}>{product.price}</Text>
+      <Text style={styles.price}>{product.convertedPrice.toFixed(2)}</Text>
     </View>
   )
 }

@@ -32,7 +32,7 @@ export default function App({ navigation}) {
     if (isFocused) {
       fetchProducts();
     }
-  }, [isFocused]);
+  }, [isFocused, currency]);
 
   if (loading) { 
         return <ActivityIndicator size={"large"}/>

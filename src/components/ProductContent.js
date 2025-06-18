@@ -39,12 +39,15 @@ const ProductContent = ({ product }) => {
     }
   };
 
+
   return (
-    <ScrollView contentContainerStyle={{
+    <ScrollView 
+    style={{flex:1}}
+    contentContainerStyle={{
       alignItems: 'center',
       backgroundColor: '#ECF0F1',
       paddingHorizontal: 20,
-      flex: 1,
+
     }}
     >
         <Image source={{uri: 'https://placehold.co/300x370/png'}} style={styles.image}/>
@@ -74,9 +77,6 @@ const ProductContent = ({ product }) => {
         <Text style={styles.descriptionTitle}>Descrição:</Text>
         <Text style={styles.text}>{product.description}</Text>
         </View>
-        <Text style={styles.text}>{product.description}</Text>
-        <Text style={styles.text}>{product.description}</Text>
-        <Text style={styles.text}>{product.description}</Text>
 
     </ScrollView>
   )
@@ -84,6 +84,7 @@ const ProductContent = ({ product }) => {
 
 const styles = StyleSheet.create({
   image: {
+    marginTop: 15,
     width:300,
     height:370,
   },
@@ -120,6 +121,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     borderTopColor: '#2b3e50',
     borderTopWidth: 1,
+    paddingVertical: 5,
+    marginTop: 5,
   },
   text: {
     fontFamily: 'Lora_400Regular',
