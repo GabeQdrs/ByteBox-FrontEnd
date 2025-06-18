@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native'
 import { setFavorite } from '../services/ProductService';
 import { useEffect, useState } from 'react';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import { useCart } from '../contexts/CartContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -10,6 +11,7 @@ const favoriteTrue = require('../../assets/icons/favoriteTrue.png');
 const favoriteFalse = require('../../assets/icons/favoriteFalse.png');
 
 const ProductContent = ({ product }) => {
+  const {addToCart} =useCart();
   const [isFavorited, setIsFavorited] = useState(product.favorite);
   const [loaded, error] = useFonts ({
       Lora_400Regular,
@@ -39,6 +41,10 @@ const ProductContent = ({ product }) => {
     }
   };
 
+  const handleAddToCart = () => {
+    addToCart(product);
+    Alert.alert("Carrinho", "Produto adicionado ao carrinho!");
+  };
 
   return (
     <ScrollView 
@@ -65,7 +71,7 @@ const ProductContent = ({ product }) => {
             </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
           <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
         </TouchableOpacity>
 

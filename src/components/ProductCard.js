@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, Image, StyleSheet,TouchableOpacity, ImageBackground} from 'react-native';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import CurrencyContext from '../contexts/CurrencyContext';
 
 
 SplashScreen.preventAutoHideAsync();
 
 const ProductCard = ({ product, onPress }) => {
+  const {currency} = useContext(CurrencyContext)
   const [loaded, error] = useFonts ({
       Lora_400Regular,
       Lora_600SemiBold,
@@ -23,13 +25,23 @@ const ProductCard = ({ product, onPress }) => {
       return null;
     }
 
+    let coin;
+      if (currency === 'USD') {
+        coin = 'US$ '
+      } else if (currency === 'EUR') {
+        coin = '€ '
+      } else {
+        coin = 'R$ '
+      }
+    
+
   return (
     
     
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={{uri: "https://placehold.co/140x190/png"}} style={styles.image} />
       <Text style={styles.title}>{product.theme}</Text>
-      <Text style={styles.price}>{product.convertedPrice.toFixed(2)}</Text>
+      <Text style={styles.price}>{coin}{product.convertedPrice.toFixed(2)}</Text>
 
     </TouchableOpacity >
   );

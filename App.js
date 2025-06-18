@@ -1,15 +1,18 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { CurrencyProvider } from './src/contexts/CurrencyContext';
 import Routes from './src/routes/routes';
+import CartProvider from './src/contexts/CartContext';
 
 
 export default function App() {
   return (
-    <CurrencyProvider>
-      <NavigationContainer>
-        <Routes/>
-      </NavigationContainer>
-    </CurrencyProvider>
+    <CartProvider>
+      <CurrencyProvider>
+        <NavigationContainer>
+          <Routes/>
+        </NavigationContainer>
+      </CurrencyProvider>
+    </CartProvider>
 
   );
 }

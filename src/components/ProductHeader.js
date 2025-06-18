@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet } from 'react-native'
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import CurrencyContext from '../contexts/CurrencyContext';
 
 SplashScreen.preventAutoHideAsync();
 
 const ProductHeader = ({ product }) => {
+  const {currency} = useContext(CurrencyContext)
     const [loaded, error] = useFonts ({
           Lora_400Regular,
           Lora_600SemiBold,
@@ -22,6 +24,14 @@ const ProductHeader = ({ product }) => {
           return null;
         }
 
+    let coin;
+      if (currency === 'USD') {
+        coin = 'US$ '
+      } else if (currency === 'EUR') {
+        coin = '€ '
+      } else {
+        coin = 'R$ '
+      }
 
   return (
     <View style={styles.container}>
@@ -29,7 +39,7 @@ const ProductHeader = ({ product }) => {
       <Text style={styles.title}>{product.theme}</Text>
       <Text style={styles.quantity}>Livros incluso: {product.quantity}</Text>
       </View>
-      <Text style={styles.price}>{product.convertedPrice.toFixed(2)}</Text>
+      <Text style={styles.price}>{coin}{product.convertedPrice.toFixed(2)}</Text>
     </View>
   )
 }

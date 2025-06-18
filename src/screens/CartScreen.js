@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,36 +9,22 @@ import {
   Dimensions,
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
-import RenderItem from '../components/RenderItem';
+import CartProduct from '../components/CartProduct';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { useCart } from '../contexts/CartContext';
+import { useIsFocused } from '@react-navigation/native';
 
 SplashScreen.preventAutoHideAsync();
 
-const { width } = Dimensions.get('window');
-
-/* LISTA DE PRODUTOS */
-const productsData = [
-  {
-    id: '1',
-    title: 'Livro 1',
-    subtitle: 'Descrição Livro 1',
-    price: 100.9,
-    
-  },
-  {
-    id: '2',
-    title: 'Livro 2',
-    subtitle: 'Descrição Livro 2',
-    price: 69.9,
-    image: 'https://br.freepik.com/fotos-vetores-gratis/livros-png',
-  },
-];
 
 export default function CartScreen() {
-  const [selectedItems, setSelectedItems] = useState(['1', '2']);
+  const {
+    cartItems,
+    removeFromCart,
+  } = useCart();
+
+  const isFocused = useIsFocused();
 
    const [loaded, error] = useFonts ({
       Lora_400Regular,
@@ -46,20 +32,6 @@ export default function CartScreen() {
       Lora_700Bold
     });
 
-  /* MARCAR OU DESMARCAR PRODUTOS */
-  const toggleItem = (id) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  /* CALCULAR O TOTAL */
-  const total = productsData
-    .filter((item) => selectedItems.includes(item.id))
-    .reduce((sum, item) => sum + item.price, 0);
-    
-
-  
 
   return (
     <View style={styles.wrapper}>
@@ -69,28 +41,23 @@ export default function CartScreen() {
 
         {/* Lista de produtos */}
         <FlatList
-          data={productsData}
+          data={cartItems}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <RenderItem
-              item={item}
-              selected={selectedItems.includes(item.id)}
+            <CartProduct
+              product={item}
               onPress={() => toggleItem(item.id)}
             />
           )}
         />
       </ScrollView>
 
-
-
-
-
       {/* Footer */}
       <View style={styles.footer}>
         <View>
-          <Text style={styles.footerText}>Total de itens: {selectedItems.length}</Text>
-          <Text style={styles.footerText}>Valor total: R$ {total.toFixed(2)}</Text>
+          <Text style={styles.footerText}>Total de itens: </Text>
+          <Text style={styles.footerText}>Valor total: </Text>
         </View>
         <TouchableOpacity style={styles.buyButton}>
           <Text style={styles.buyButtonText}>Comprar</Text>
