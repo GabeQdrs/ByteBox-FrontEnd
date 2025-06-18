@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import {
   View,
   TextInput,
@@ -14,8 +14,11 @@ import { getSearchProducts } from '../services/ProductService';
 import ProductCard from '../components/ProductCard';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
+import CurrencyContext from '../contexts/CurrencyContext';
 
 const SearchScreen = () => {
+
+  const { currency, changeCurrency } = useContext(CurrencyContext);
   const [searchInput, setSearchInput] = useState('');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,7 +34,7 @@ const SearchScreen = () => {
     Keyboard.dismiss();
 
     try {
-      const result = await getSearchProducts(searchInput);
+      const result = await getSearchProducts(searchInput,currency);
       if (result.length === 0) {
         setError('Nenhum produto encontrado.');
       } else {
@@ -47,10 +50,11 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <CustomHeader />
+      <View style={styles.fundo}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Buscar produtos..."
+          placeholder="Buscar produtos"
           value={searchInput}
           onChangeText={setSearchInput}
           returnKeyType="search"
@@ -60,7 +64,7 @@ const SearchScreen = () => {
           <Ionicons name="search" size={24} color="#000" />
         </TouchableOpacity>
       </View>
-
+      </View>
       {loading && (
         <ActivityIndicator size="large" color="#000" style={styles.loader} />
       )}
@@ -99,12 +103,23 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     marginBottom: 16,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 8,
     paddingHorizontal: 10,
     alignItems: 'center',
-    borderColor: '#ccc',
+    borderColor: '#2b3e50',
     marginTop: 10,
+    marginRight:10,
+    marginLeft:10,
+    marginBottom:10,
+  },
+  fundo:{
+    backgroundColor:'#A9CCE3',
+    marginTop: 10,
+    marginRight:10,
+    marginLeft:10,
+    marginBottom:10,
+    borderRadius: 8,
   },
   input: {
     flex: 1,
@@ -139,7 +154,7 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
-    fontSize: 16,
+    fontSize: 20,
   },
   row: {
     justifyContent: 'space-between',
