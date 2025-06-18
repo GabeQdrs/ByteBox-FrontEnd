@@ -24,9 +24,9 @@ export async function setFavorite(productId, newFavoriteStatus) {
     throw error;
   }
 }
-export async function getSearchProducts(searchInput) {
+export async function getSearchProducts(searchInput,currency) {
   try {
-    const response = await api.get(`products/search/${searchInput}`);
+    const response = await api.get(`products/search/${searchInput}/${currency}`);
     return response.data;
   } catch (error) {
     throw error;
