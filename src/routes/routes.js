@@ -1,13 +1,15 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import RegisterScreen from '../screens/auth/RegisterScreen';
 import ProductScreen from '../screens/ProductScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CartScreen from '../screens/CartScreen';
 import SearchScreen from '../screens/SearchScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { useAuth } from '../contexts/AuthContext';
 
 
 
@@ -61,20 +63,36 @@ export default function Routes() {
         })
         }>
     
-          <Stack.Screen name='Inicio' component={HomeScreen}/>
-          <Stack.Screen name='Perfil' component={ProfileScreen}/>
-          <Stack.Screen name='Carrinho' component={CartScreen}/>
-          <Stack.Screen name='Pesquisar' component={SearchScreen}/>
+          <Tab.Screen name='Inicio' component={HomeScreen}/>
+          <Tab.Screen name='Perfil' component={ProfileScreen}/>
+          <Tab.Screen name='Carrinho' component={CartScreen}/>
+          <Tab.Screen name='Pesquisar' component={SearchScreen}/>
         </Tab.Navigator>
       )
     }
 
+  const { user } = useAuth();
+  if (!user) {
     return (
-        <Stack.Navigator initialRouteName='Entrar'screenOptions={{ headerShown: false }} >
-            <Stack.Screen name='Entrar' component={LoginScreen}/>
-            <Stack.Screen name='Cadastro' component={RegisterScreen}/>
-            <Stack.Screen name='Produto' component={ProductScreen}/>
-            <Stack.Screen name='AppTabs' component={MainAppTabs}/>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Entrar"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Cadastro"
+            component={RegisterScreen}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
+    );
+  }
+
+  return (
+      <Stack.Navigator screenOptions={{ headerShown: false }} >
+        <Stack.Screen name='AppTabs' component={MainAppTabs}/>
+        <Stack.Screen name='Produto' component={ProductScreen}/>
+      </Stack.Navigator>
   )
 }

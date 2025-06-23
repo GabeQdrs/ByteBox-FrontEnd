@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import { useAuth } from '../../contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function LoginScreen({navigation}) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
+
   const [loaded, error] = useFonts ({
     Lora_400Regular,
     Lora_600SemiBold,
@@ -22,6 +29,37 @@ export default function LoginScreen({navigation}) {
     return null;
   }
 
+    const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Campos obrigatórios", "Preencha o e-mail e a senha.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("E-mail inválido", "Digite um e-mail válido.");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Senha inválida", "A senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await signIn({ email, password });
+      if (response?.error) {
+        Alert.alert("Erro", response.error);
+        return;
+      }
+    } catch (error) {
+      Alert.alert("Erro inesperado", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -31,7 +69,7 @@ export default function LoginScreen({navigation}) {
 
       <View style={styles.logoContainer}>
         <Image
-           source={require('../../assets/logobyte.png')}
+           source={require('../../../assets/logobyte.png')}
           style={styles.logo}
         />
       </View>      
@@ -44,6 +82,8 @@ export default function LoginScreen({navigation}) {
           placeholder="Insira seu e-mail aqui"
           placeholderTextColor={'#A5AAAB'}
           style={styles.input}
+          value={email}
+          onChangeText={setEmail}
         />
       </View>  
 
@@ -52,12 +92,14 @@ export default function LoginScreen({navigation}) {
         <TextInput
           placeholder="Insira sua senha aqui"
           placeholderTextColor={'#A5AAAB'}
-          secureTextEntry
           style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
         />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AppTabs', {screen:'Inicio'})}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
