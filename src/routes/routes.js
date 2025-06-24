@@ -10,6 +10,7 @@ import CartScreen from '../screens/CartScreen';
 import SearchScreen from '../screens/SearchScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
+import ProductFormScreen from '../screens/ProductFormScreen';
 
 
 
@@ -20,6 +21,8 @@ const Tab = createBottomTabNavigator();
 export default function Routes() {
   
     function MainAppTabs() {
+      const {user} = useAuth();
+
       return (
         <Tab.Navigator
          screenOptions={ ({ route }) => ({
@@ -39,7 +42,7 @@ export default function Routes() {
               iconSource = require('../../assets/icons/cart.png')
             } else if (route.name === 'Pesquisar') {
               iconSource = require('../../assets/icons/search.png')
-            }
+            } 
             return ( 
             <View style={{
               backgroundColor: focused ? '#ECF0F1' : '#2b3e50',  
@@ -57,15 +60,21 @@ export default function Routes() {
           },
           tabBarStyle: {
             backgroundColor: '#2b3e50',
-            paddingTop: 14,
+            paddingTop: 16,
             height: 80,
           }
         })
         }>
-    
+          
           <Tab.Screen name='Inicio' component={HomeScreen}/>
-          <Tab.Screen name='Perfil' component={ProfileScreen}/>
-          <Tab.Screen name='Carrinho' component={CartScreen}/>
+          {user?.type === 'Admin' ? (
+            <Tab.Screen name='Formulario' component={ProductFormScreen}/>
+          ) : (
+            <>
+              <Tab.Screen name='Perfil' component={ProfileScreen}/>
+              <Tab.Screen name='Carrinho' component={CartScreen}/>
+            </>
+          )}
           <Tab.Screen name='Pesquisar' component={SearchScreen}/>
         </Tab.Navigator>
       )

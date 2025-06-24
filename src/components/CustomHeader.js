@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
 import CurrencyContext from '../contexts/CurrencyContext';
+import { useAuth } from '../contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,6 +13,7 @@ const germanyFlag = require('../../assets/flags/gerFlag.png');
 
 const CustomHeader = () => {
   const { currency, changeCurrency } = useContext(CurrencyContext);
+  const {logout} = useAuth();
 
   const [loaded, error] = useFonts ({
       Lora_400Regular,
@@ -40,6 +42,9 @@ const CustomHeader = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={logout} style={styles.logoutButtom}>
+        <Text style={styles.logoutButtomText}>Sair</Text>
+      </TouchableOpacity>
       <Text style={styles.text}>ByteBox</Text>
       <TouchableOpacity  onPress={changeCurrency}>
         <Image 
@@ -70,6 +75,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 40,
     height: 30,
+  },
+  logoutButtom: {
+      backgroundColor: '#FB4B4B',
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 8,
+  },
+  logoutButtomText: {
+    fontFamily: 'Lora_700Bold',
+    color: '#ECF0F1'
   }
 
 });

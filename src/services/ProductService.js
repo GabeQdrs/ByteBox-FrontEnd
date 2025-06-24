@@ -10,16 +10,6 @@ export async function getProducts(currency) {
     }
 }
 
-export async function setFavorite(productId, newFavoriteStatus) {
-  const endpoint = `products/${productId}/favorite/${newFavoriteStatus}`;
-  try {
-    const response = await api.put(endpoint); 
-    return response.data;
-  } catch (error) {
-      console.log("Erro ao favoritar" + error);
-      throw error;
-  }
-}
 export async function getSearchProducts(searchInput,currency) {
   try {
     const response = await api.get(`products/search/${searchInput}/${currency}`);
@@ -29,13 +19,36 @@ export async function getSearchProducts(searchInput,currency) {
   }
 }
 
-export async function getFavorites() {
+export async function createProduct(productToCreate, token) {
   try {
-    const response = await api.get("products/favorites");
-    const products = response.data;
-    return products;
+    const response = await api.post("/ws/products", productToCreate, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {
+      product: response.data,
+      error: null,
+    };
   } catch (error) {
-    console.error("Erro ao buscar favoritos: " + error);
-    throw error;
+    return { error: error.message };
+  }
+}
+
+export async function updateProduct(id, productToUpdate, token) {
+  try {
+    const response = await api.put(`/ws/products/${id}`, productToUpdate, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {
+      product: response.data,
+      error: null,
+    };
+  } catch (error) {
+    return { error: error.message };
   }
 }
