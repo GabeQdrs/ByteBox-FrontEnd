@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import livroImg from '../../assets/ImagemLivroTeste.jpg';
 
-const FavoriteItem = ({ item, selected, onPress }) => {
+const FavoriteItem = ({ item, selected, onPress, onRemove }) => {
   return (
     <View style={styles.productCard}>
       {/* IMAGEM */}
