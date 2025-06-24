@@ -14,6 +14,8 @@ import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo
 import * as SplashScreen from 'expo-splash-screen';
 import { useCart } from '../contexts/CartContext';
 import { useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { useOrders } from '../contexts/OrdersContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,6 +25,16 @@ export default function CartScreen() {
     cartItems,
     removeFromCart,
   } = useCart();
+
+  const { addOrder } = useOrders(); 
+  const navigation = useNavigation();
+
+   const handleBuy = () => {
+    if (cartItems.length > 0) {
+      addOrder(cartItems);
+      
+    }
+  };
 
   const isFocused = useIsFocused();
 
@@ -59,7 +71,7 @@ export default function CartScreen() {
           <Text style={styles.footerText}>Total de itens: </Text>
           <Text style={styles.footerText}>Valor total: </Text>
         </View>
-        <TouchableOpacity style={styles.buyButton}>
+        <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
           <Text style={styles.buyButtonText}>Comprar</Text>
         </TouchableOpacity>
       </View>
