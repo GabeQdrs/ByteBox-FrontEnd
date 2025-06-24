@@ -3,18 +3,21 @@ import { CurrencyProvider } from './src/contexts/CurrencyContext';
 import Routes from './src/routes/routes';
 import CartProvider from './src/contexts/CartContext';
 import AuthProvider from './src/contexts/AuthContext';
+import { FavoritesProvider } from './src/contexts/FavoritesContext';
 
 
 export default function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <CurrencyProvider>
-          <NavigationContainer>
-            <Routes/>
-          </NavigationContainer>
-        </CurrencyProvider>
-      </CartProvider>
+      <FavoritesProvider>
+        <CartProvider>
+          <CurrencyProvider>
+            <NavigationContainer>
+              <Routes/>
+            </NavigationContainer>
+          </CurrencyProvider>
+        </CartProvider>
+      </FavoritesProvider>
     </AuthProvider>
 
   );
