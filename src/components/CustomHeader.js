@@ -77,10 +77,10 @@ const styles = StyleSheet.create({
     height: 30,
   },
   logoutButtom: {
-      backgroundColor: '#FB4B4B',
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      borderRadius: 8,
+      backgroundColor: '#bf3f3f',
+      paddingHorizontal: 15,
+      paddingVertical: 6,
+      borderRadius: 10,
   },
   logoutButtomText: {
     fontFamily: 'Lora_700Bold',

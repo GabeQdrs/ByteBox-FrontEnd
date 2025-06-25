@@ -35,14 +35,11 @@ const ProductCard = ({ product, onPress }) => {
       }
     
 
-  return (
-    
-    
+  return (    
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={{uri: "https://placehold.co/140x190/png"}} style={styles.image} />
+      <Image source={{uri: product.imageUrl}} style={styles.image} />
       <Text style={styles.title}>{product.theme}</Text>
       <Text style={styles.price}>{coin}{product.convertedPrice.toFixed(2)}</Text>
-
     </TouchableOpacity >
   );
 };

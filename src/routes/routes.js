@@ -39,10 +39,12 @@ export default function Routes() {
             } else if (route.name === 'Perfil') {
               iconSource = require('../../assets/icons/profile.png');
             } else if (route.name === 'Carrinho') {
-              iconSource = require('../../assets/icons/cart.png')
+              iconSource = require('../../assets/icons/cart.png');
             } else if (route.name === 'Pesquisar') {
-              iconSource = require('../../assets/icons/search.png')
-            } 
+              iconSource = require('../../assets/icons/search.png');
+            } else if (route.name === 'Formulario') {
+              iconSource = require('../../assets/icons/addProduct.png');
+            }
             return ( 
             <View style={{
               backgroundColor: focused ? '#ECF0F1' : '#2b3e50',  

@@ -6,7 +6,7 @@ export async function getProducts(currency) {
         return response.data.content;
     } catch (error) {
       console.log("Erro ao buscar produto" + error);
-      throw error;
+      throw "Erro ao buscar produtos";
     }
 }
 
@@ -15,7 +15,8 @@ export async function getSearchProducts(searchInput,currency) {
     const response = await api.get(`products/search/${searchInput}/${currency}`);
     return response.data;
   } catch (error) {
-    throw error;
+    console.log("Erro ao buscar produto" + error);
+    throw "Erro ao buscar produtos";
   }
 }
 
@@ -32,7 +33,7 @@ export async function createProduct(productToCreate, token) {
       error: null,
     };
   } catch (error) {
-    return { error: error.message };
+    return "Erro ao criar produto";
   }
 }
 
@@ -48,6 +49,20 @@ export async function updateProduct(id, productToUpdate, token) {
       product: response.data,
       error: null,
     };
+  } catch (error) {
+    return "Erro ao atualizar produto";
+  }
+}
+
+export async function deleteProduct(id, token) {
+  try {
+    await api.delete(`/ws/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {};
   } catch (error) {
     return { error: error.message };
   }

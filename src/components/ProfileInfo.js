@@ -32,9 +32,6 @@ const ProfileInfo = () => {
             <Text style={styles.name}>{user.name}</Text>
             <Text style={styles.signature}>Sem assinatura</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={logout}>
-            <Text style={styles.buttonText}>Sair</Text>
-        </TouchableOpacity>
 
     </View>
   )
