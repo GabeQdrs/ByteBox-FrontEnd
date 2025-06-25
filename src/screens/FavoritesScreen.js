@@ -68,7 +68,7 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ECF0F1',
   },
   listContainer: {
     paddingHorizontal: 10,

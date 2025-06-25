@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import livroImg from '../../assets/ImagemLivroTeste.jpg';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 const FavoriteItem = ({ item }) => {
   const { isFavorite, toggleFavorite, removeFavorite } = useFavorites();
+  
 
   const favorited = isFavorite(item.id);
+
+  const [loaded, error] = useFonts({
+      Lora_400Regular,
+      Lora_600SemiBold,
+      Lora_700Bold
+    });
+  
+    useEffect(() => {
+      if (loaded || error) {
+        SplashScreen.hideAsync();
+      }
+    }, [loaded, error]);
+  
+    if (!loaded && !error) {
+      return null;
+    }
 
   const handleToggleFavorite = () => {
     if (favorited) {
@@ -20,11 +40,11 @@ const FavoriteItem = ({ item }) => {
   return (
     <View style={styles.productCard}>
       {/* IMAGEM */}
-      <Image source={livroImg} style={styles.productImage} />
+      <Image source={{uri: item.imageUrl}} style={styles.productImage} />
 
       <View style={styles.productDetails}>
-        <Text style={styles.productTitle}>{item.title}</Text>
-        <Text style={styles.productSubtitle}>{item.subtitle}</Text>
+        <Text style={styles.productTitle}>{item.theme}</Text>
+        <Text style={styles.productSubtitle}>Livros incluso: {item.quantity}</Text>
         <Text style={styles.productPrice}>R$ {item.price.toFixed(2)}</Text>
       </View>
 
@@ -42,10 +62,9 @@ const FavoriteItem = ({ item }) => {
 
 const styles = StyleSheet.create({
   productCard: {
+    flex: 1,
     flexDirection: 'row',
-    marginVertical: 5,
     borderRadius: 10,
-    padding: 10,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#2b3e50',
@@ -53,31 +72,39 @@ const styles = StyleSheet.create({
   productDetails: {
     flex: 1,
     marginLeft: 20,
+    marginBottom: 10,
   },
   productTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginTop: -10,
+    color: '#2b3e50',
+    fontFamily: 'Lora_700Bold',
+    fontSize: 20,
+    paddingTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#2b3e50',
   },
   productSubtitle: {
-    fontSize: 12,
-    color: '#555',
-    marginTop: 10,
+    fontFamily: 'Lora_600SemiBold',
+    fontSize: 15,
+    color: '#2b3e50',
+    marginTop: 5,
   },
   productPrice: {
+    color: '#2b3e50',
+    fontFamily: 'Lora_600SemiBold',
     fontSize: 20,
-    fontWeight: 'bold',
     marginTop: 80,
   },
   productImage: {
-    width: 100,
+    width: "35%",
     height: 150,
     borderRadius: 8,
+    
   },
   heartContainer: {
-    marginTop: 120,
+    alignSelf: 'flex-end',
+    marginRight: 15,
+    marginBottom: 10,
+
   },
 });
 

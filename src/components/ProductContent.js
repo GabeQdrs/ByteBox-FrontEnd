@@ -8,6 +8,7 @@ import CurrencyContext from '../contexts/CurrencyContext'; // ✅ IMPORTAÇÃO D
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,7 +18,7 @@ const favoriteFalse = require('../../assets/icons/favoriteFalse.png');
 const ProductContent = ({ product }) => {
   const { addToCart } = useCart();
   const { currency } = useContext(CurrencyContext); // ✅ PEGA A MOEDA
-  const [isFavorited, setIsFavorited] = useState(product.favorite);
+  const { toggleFavorite, isFavorite } = useFavorites();
   const {token, user} = useAuth();
   const navigation = useNavigation();
 
@@ -37,18 +38,14 @@ const ProductContent = ({ product }) => {
     return null;
   }
 
-  const changeFavorite = async () => {
-    const newStatus = !isFavorited;
-    setIsFavorited(newStatus);
-
+  const changeFavorite = () => {
     try {
-      await setFavorite(product.id, newStatus)
+      toggleFavorite(product);
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível atualizar o favorito. Tente novamente.")
-      setIsFavorited(!newStatus);
+      Alert.alert("Erro", "não foi possível favoritar")
     }
   };
-
+  
   const handleAddToCart = () => {
     addToCart(product);
     Alert.alert("Carrinho", "Produto adicionado ao carrinho!");
@@ -128,7 +125,7 @@ const ProductContent = ({ product }) => {
       ) : (
         <TouchableOpacity onPress={changeFavorite}>
           <Image
-            source={isFavorited ? favoriteTrue : favoriteFalse}
+            source={isFavorite(product.id) ? favoriteTrue : favoriteFalse}
             style={styles.favoriteIcon}
           />
         </TouchableOpacity>
