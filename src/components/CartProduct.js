@@ -46,7 +46,7 @@ const CartProduct = ({ product, onPress }) => {
   return (
   <View style={styles.productCard}>
 
-    
+    <Image source={livroImg} style={styles.productImage} />
 
   
     <View style={styles.productDetails}>
@@ -60,7 +60,7 @@ const CartProduct = ({ product, onPress }) => {
     >
       <Image source={trashIcon} style={styles.trash}/>
     </TouchableOpacity>    
-
+    
   </View>
 
   );

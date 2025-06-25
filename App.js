@@ -28,3 +28,6 @@ export default function App() {
 // AZUL ESCURO: #2b3e50
 // AZUL CLARO: #A9CCE3
 // BRANCO: #ECF0F1
+
+//Email: admin@bytebox.com
+//password: bytebox@2025

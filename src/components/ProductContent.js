@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native'
 import { setFavorite } from '../services/ProductService';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCart } from '../contexts/CartContext';
+import CurrencyContext from '../contexts/CurrencyContext'; // ✅ IMPORTAÇÃO DO CONTEXTO
 
 SplashScreen.preventAutoHideAsync();
 
@@ -11,24 +12,26 @@ const favoriteTrue = require('../../assets/icons/favoriteTrue.png');
 const favoriteFalse = require('../../assets/icons/favoriteFalse.png');
 
 const ProductContent = ({ product }) => {
-  const {addToCart} =useCart();
+  const { addToCart } = useCart();
+  const { currency } = useContext(CurrencyContext); // ✅ PEGA A MOEDA
   const [isFavorited, setIsFavorited] = useState(product.favorite);
-  const [loaded, error] = useFonts ({
-      Lora_400Regular,
-      Lora_600SemiBold,
-      Lora_700Bold
-    });
-  
-    useEffect(() => {
-      if (loaded || error) {
-        SplashScreen.hideAsync();
-      }
-    }, [loaded, error]);
-  
-    if (!loaded && !error) {
-      return null;
+
+  const [loaded, error] = useFonts({
+    Lora_400Regular,
+    Lora_600SemiBold,
+    Lora_700Bold
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
     }
-    
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   const changeFavorite = async () => {
     const newStatus = !isFavorited;
     setIsFavorited(newStatus);
@@ -46,44 +49,57 @@ const ProductContent = ({ product }) => {
     Alert.alert("Carrinho", "Produto adicionado ao carrinho!");
   };
 
+  // ✅ FORMATAÇÃO DA MOEDA
+  let coin;
+  if (currency === 'USD') {
+    coin = 'US$ ';
+  } else if (currency === 'EUR') {
+    coin = '€ ';
+  } else {
+    coin = 'R$ ';
+  }
+
   return (
-    <ScrollView 
-    style={{flex:1}}
-    contentContainerStyle={{
-      alignItems: 'center',
-      backgroundColor: '#ECF0F1',
-      paddingHorizontal: 20,
-
-    }}
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
+        alignItems: 'center',
+        backgroundColor: '#ECF0F1',
+        paddingHorizontal: 20,
+      }}
     >
-        <Image source={{uri: 'https://placehold.co/300x370/png'}} style={styles.image}/>
-        
-        <View style={styles.info}>
-          <View>
-            <Text style={styles.text}>Categoria: {product.category}</Text>
-            <Text style={styles.text}>Em estoque: {product.stock}</Text>
-          </View>
-            <TouchableOpacity onPress={changeFavorite}>
-                <Image 
-                    source={isFavorited ? favoriteTrue : favoriteFalse} 
-                    style={styles.favoriteIcon}
-                />
-            </TouchableOpacity>
-        </View>
+      <Image source={{ uri: 'https://placehold.co/300x370/png' }} style={styles.image} />
 
-        <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
-          <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Comprar</Text>
-        </TouchableOpacity>
-
+      <View style={styles.info}>
         <View>
+          <Text style={styles.text}>Categoria: {product.category}</Text>
+          <Text style={styles.text}>Em estoque: {product.stock}</Text>
+          
+          
+        </View>
+        
+        <TouchableOpacity onPress={changeFavorite}>
+          <Image
+            source={isFavorited ? favoriteTrue : favoriteFalse}
+            style={styles.favoriteIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.price}>{coin}{product.convertedPrice.toFixed(2)}</Text>
+
+      <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
+        <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Comprar</Text>
+      </TouchableOpacity>
+
+      <View>
         <Text style={styles.descriptionTitle}>Descrição:</Text>
         <Text style={styles.text}>{product.description}</Text>
-        </View>
-
+      </View>
     </ScrollView>
   )
 }
@@ -91,18 +107,18 @@ const ProductContent = ({ product }) => {
 const styles = StyleSheet.create({
   image: {
     marginTop: 15,
-    width:300,
-    height:370,
+    width: 300,
+    height: 370,
   },
   favoriteIcon: {
     width: 33,
     height: 29,
   },
   info: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',  
+    width: '100%',
     marginVertical: 15,
     paddingVertical: 7,
     borderBottomColor: '#2b3e50',
@@ -110,6 +126,17 @@ const styles = StyleSheet.create({
     borderTopColor: '#2b3e50',
     borderTopWidth: 1,
   },
+  price: {
+      color: '#2b3e50',
+      fontFamily: 'Lora_700Bold',
+      fontSize: 30,
+      backgroundColor: '#ECF0F1',
+      paddingHorizontal: 25,
+      paddingVertical: 5,
+      borderBottomWidth: 1,
+      marginBottom: 15,
+       borderBottomColor: '#2b3e50',
+    },
   button: {
     backgroundColor: '#A9CCE3',
     width: '100%',
@@ -134,7 +161,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Lora_400Regular',
     fontSize: 15,
   }
-
 });
 
-export default ProductContent
+export default ProductContent;
