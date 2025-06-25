@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   containerDois: {
-    flex: 0.8,
+    flex: 0.83,
     justifyContent: 'space-between'
   },
   byteBox: {

@@ -37,7 +37,7 @@ const CustomHeader = () => {
       } else if (currency === 'EUR') {
         return germanyFlag;
       }
-      return brazilFlag; // padrão
+      return brazilFlag; 
     }
 
   return (
