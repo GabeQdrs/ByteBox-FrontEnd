@@ -16,13 +16,13 @@ const FavoriteItem = ({ item, selected, onPress, onRemove }) => {
       </View>
 
       {/* CORAÇÃO */}
-      <TouchableOpacity onPress={onPress} style={styles.heartContainer}>
-        <Icon
-          name={selected ? 'heart' : 'heart-o'}
-          size={30}
-          color={selected ? 'red' : 'gray'}
-        />
-      </TouchableOpacity>
+     <TouchableOpacity onPress={onRemove} style={styles.heartContainer}>
+      <Icon
+        name={'heart'}
+        size={30}
+        color={'red'}
+      />
+    </TouchableOpacity>
     </View>
   );
 };
