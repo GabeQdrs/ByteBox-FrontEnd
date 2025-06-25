@@ -1,70 +1,48 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useState } from "react";
 
-// Estado inicial
-const initialState = {
-  favorites: [],
-};
-
-// Tipos de ações
-const ADD_TO_FAVORITES = 'ADD_TO_FAVORITES';
-const REMOVE_FROM_FAVORITES = 'REMOVE_FROM_FAVORITES';
-
-// Redutor
-const favoritesReducer = (state, action) => {
-  switch (action.type) {
-    case ADD_TO_FAVORITES:
-      // Evita duplicados
-      if (state.favorites.some(item => item.id === action.payload.id)) {
-        return state;
-      }
-      return {
-        ...state,
-        favorites: [...state.favorites, action.payload],
-      };
-
-    case REMOVE_FROM_FAVORITES:
-      return {
-        ...state,
-        favorites: state.favorites.filter(item => item.id !== action.payload),
-      };
-
-    default:
-      return state;
-  }
-};
-
-// Criação do contexto
 const FavoritesContext = createContext();
 
-// Hook de uso
-export const useFavorites = () => useContext(FavoritesContext);
+export default function FavoritesProvider({ children }) {
+  const [favoriteItems, setFavoriteItems] = useState([]);
 
-// Provider
-export const FavoritesProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(favoritesReducer, initialState);
+  function toggleFavorite(item) {
+    setFavoriteItems((currentItems) => {
+      const isAlreadyFavorite = currentItems.some(fav => fav.id === item.id);
 
-  const addToFavorites = (item) => {
-    dispatch({ type: ADD_TO_FAVORITES, payload: item });
-  };
+      if (isAlreadyFavorite) {
+        return currentItems.filter(fav => fav.id !== item.id);
+      } else {
+        return [...currentItems, item];
+      }
+    });
+  }
 
-  const removeFromFavorites = (id) => {
-    dispatch({ type: REMOVE_FROM_FAVORITES, payload: id });
-  };
+  function removeFavorite(itemId) {
+    setFavoriteItems((prevItems) =>
+      prevItems.filter((item) => item.id !== itemId)
+    );
+  }
 
-  const isFavorite = (id) => {
-    return state.favorites.some((item) => item.id === id);
+
+  function isFavorite(itemId) {
+    return favoriteItems.some((item) => item.id === itemId);
+  }
+
+  const favoritesCount = favoriteItems.length;
+
+  const value = {
+    favoriteItems,
+    toggleFavorite,
+    removeFavorite,
+    isFavorite,
+    favoritesCount,
   };
 
   return (
-    <FavoritesContext.Provider
-      value={{
-        favorites: state.favorites,
-        addToFavorites,
-        removeFromFavorites,
-        isFavorite,
-      }}
-    >
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
   );
-};
+}
+
+export const useFavorites = () => useContext(FavoritesContext);
