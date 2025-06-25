@@ -19,7 +19,7 @@ SplashScreen.preventAutoHideAsync();
 const { width } = Dimensions.get('window');
 
 export default function FavoritesScreen() {
-  const { favorites, removeFromFavorites } = useFavorites();
+  const { favoriteItems, removeFavorite } = useFavorites();
   const [selectedItems, setSelectedItems] = useState([]);
 
   const [fontsLoaded] = useFonts({
@@ -41,13 +41,13 @@ export default function FavoritesScreen() {
 
   return (
     <View style={styles.wrapper}>
-      {favorites.length === 0 ? (
+      {favoriteItems.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Você não possui itens favoritos.</Text>
         </View>
       ) : (
         <FlatList
-          data={favorites}
+          data={favoriteItems}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (

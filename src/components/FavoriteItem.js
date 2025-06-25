@@ -2,8 +2,21 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import livroImg from '../../assets/ImagemLivroTeste.jpg';
+import { useFavorites } from '../contexts/FavoritesContext';
 
-const FavoriteItem = ({ item, selected, onPress, onRemove }) => {
+const FavoriteItem = ({ item }) => {
+  const { isFavorite, toggleFavorite, removeFavorite } = useFavorites();
+
+  const favorited = isFavorite(item.id);
+
+  const handleToggleFavorite = () => {
+    if (favorited) {
+      removeFavorite(item.id);
+    } else {
+      	toggleFavorite(item);
+    }
+  };
+
   return (
     <View style={styles.productCard}>
       {/* IMAGEM */}
@@ -16,11 +29,11 @@ const FavoriteItem = ({ item, selected, onPress, onRemove }) => {
       </View>
 
       {/* CORAÇÃO */}
-      <TouchableOpacity onPress={onPress} style={styles.heartContainer}>
+      <TouchableOpacity onPress={handleToggleFavorite} style={styles.heartContainer}>
         <Icon
-          name={selected ? 'heart' : 'heart-o'}
+          name={favorited ? 'heart' : 'heart-o'}
           size={30}
-          color={selected ? 'red' : 'gray'}
+          color={favorited ? 'red' : 'gray'}
         />
       </TouchableOpacity>
     </View>

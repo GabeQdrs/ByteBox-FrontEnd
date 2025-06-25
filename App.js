@@ -3,7 +3,7 @@ import { CurrencyProvider } from './src/contexts/CurrencyContext';
 import Routes from './src/routes/routes';
 import CartProvider from './src/contexts/CartContext';
 import AuthProvider from './src/contexts/AuthContext';
-import { FavoritesProvider } from './src/contexts/FavoritesContext';
+import FavoritesProvider from './src/contexts/FavoritesContext';
 import { OrdersProvider } from './src/contexts/OrdersContext'; // ✅ Importado aqui
 
 export default function App() {
