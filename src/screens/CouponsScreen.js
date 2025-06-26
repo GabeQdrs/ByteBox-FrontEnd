@@ -52,11 +52,11 @@ export default function CouponsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eef6fb',
+    backgroundColor: '#ECF0F1',
   },
   couponContainer: {
     flexDirection: 'row',
-    backgroundColor: '#b0d4f1',
+    backgroundColor: '#ECF0F1',
     borderRadius: 12,
     marginBottom: 15,
     overflow: 'hidden',
