@@ -11,6 +11,7 @@ import SearchScreen from '../screens/SearchScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import ProductFormScreen from '../screens/ProductFormScreen';
+import OrderConfirmationScreen from '../screens/OrderConfirmationScreen';
 
 
 
@@ -104,6 +105,7 @@ export default function Routes() {
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name='AppTabs' component={MainAppTabs}/>
         <Stack.Screen name='Produto' component={ProductScreen}/>
+        <Stack.Screen name='OrderConfirmationScreen' component={OrderConfirmationScreen}/>
       </Stack.Navigator>
   )
 }

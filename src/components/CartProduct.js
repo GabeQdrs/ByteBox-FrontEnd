@@ -69,6 +69,7 @@ const CartProduct = ({ product, onPress }) => {
 
 const styles = StyleSheet.create({
   productCard: {
+    flex:1,
     flexDirection: 'row',
     marginVertical: 5,
     borderRadius: 10,
