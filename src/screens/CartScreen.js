@@ -1,186 +1,267 @@
-import React, { useMemo } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
-  ScrollView,
+  StyleSheet,
   TouchableOpacity,
-  Alert, // Import Alert
-} from 'react-native';
-import CustomHeader from '../components/CustomHeader';
-import CartProduct from '../components/CartProduct';
-import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
-import * as SplashScreen from 'expo-splash-screen';
-import { useCart } from '../contexts/CartContext';
-import { useNavigation } from '@react-navigation/native';
-import { useOrders } from '../contexts/OrdersContext';
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
+import { createOrder } from "../services/OrderService";
 
-SplashScreen.preventAutoHideAsync();
+import CustomHeader from '../components/CustomHeader';
+
+const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg");
 
 export default function CartScreen() {
-  const { cartItems, clearCart } = useCart(); // Assuming clearCart exists to empty the cart after purchase
-  const { addOrder } = useOrders();
   const navigation = useNavigation();
+  const {
+    cartItems,
+    clearCart,
+    removeFromCart,
+    decreaseQuantity,
+    increaseQuantity,
+  } = useCart();
 
-  // Load fonts
-  const [loaded, error] = useFonts({
-    Lora_400Regular,
-    Lora_600SemiBold,
-    Lora_700Bold,
-  });
+  const { token } = useAuth();
 
-  // Calculate total items and price
-  const { totalItems, totalPrice } = useMemo(() => {
-    const itemsCount = cartItems.length;
-    const price = cartItems.reduce((sum, item) => sum + (item.convertedPrice || 0), 0);
-    return { totalItems: itemsCount, totalPrice: price };
-  }, [cartItems]);
+  const [loading, setLoading] = useState(false);
 
-  const handleBuy = () => {
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.convertedPrice * item.quantity,
+    0
+  );
+
+  const handleFinishOrder = async () => {
     if (cartItems.length === 0) {
-      Alert.alert("Carrinho Vazio", "Adicione produtos ao carrinho antes de comprar.");
+      Alert.alert("Carrinho vazio", "Adicione produtos antes de finalizar.");
       return;
     }
 
-    // Create a new order object based on the cart's content
-    const newOrder = {
-      id: `order-${Date.now()}`, // Generate a unique order ID
-      orderDate: new Date().toISOString(),
-      items: cartItems,
-      totalConvertedPrice: totalPrice,
-    };
+    try {
+      setLoading(true);
 
-    // Add the order to the orders context
-    addOrder(newOrder);
+      const response = await createOrder(cartItems, token);
+      const order = response.order;
 
-    // Navigate to the OrderConfirmationScreen with the new order data
-    navigation.navigate('OrderConfirmationScreen', { order: newOrder });
+      clearCart();
 
-    // Clear the cart after the purchase is complete
-    clearCart(); 
-  };
-  
-  // Font loading check
-  React.useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
+      navigation.navigate("OrderConfirmationScreen", { order});
+    } catch (error) {
+      console.error("Erro ao finalizar o pedido:", error);
+      Alert.alert(
+        "Erro",
+        "Não foi possível finalizar o pedido. Tente novamente mais tarde."
+      );
+    } finally {
+      setLoading(false);
     }
-  }, [loaded, error]);
+  };
 
-  if (!loaded && !error) {
-    return null; // Or a loading indicator
-  }
+  const handleRemoveItem = (id) => {
+    Alert.alert("Remover", "Tem certeza que deseja remover este item?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Remover",
+        style: "destructive",
+        onPress: () => removeFromCart(id),
+      },
+    ]);
+  };
+
+  const renderItem = ({ item }) => {
+    const imageSource =
+      item.imageUrl && item.imageUrl.trim() !== ""
+        ? DEFAULT_IMAGE
+        : DEFAULT_IMAGE;
+
+    return (
+     
+      <View style={styles.item}>
+   
+        <Image source={imageSource} style={styles.productImage} />
+
+        <View style={styles.details}>
+          <Text style={styles.description}>{item.description}</Text>
+          <Text style={styles.brand}>{item.brand}</Text>
+          <Text style={styles.priceUnit}>
+            Preço unitário: R$ {item.price.toFixed(2)}
+          </Text>
+
+          <View style={styles.quantityContainer}>
+            <View style={styles.quantityControls}>
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() => decreaseQuantity(item.id)}
+              >
+                <Ionicons
+                  name="remove-circle-outline"
+                  size={24}
+                  color="#dc3545"
+                />
+              </TouchableOpacity>
+
+              <Text style={styles.quantityText}>{item.quantity}</Text>
+
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() => increaseQuantity(item.id)}
+              >
+                <Ionicons name="add-circle-outline" size={24} color="#28a745" />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleRemoveItem(item.id)}
+            >
+              <Ionicons name="trash-outline" size={24} color="#dc3545" />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.totalItemPrice}>
+            Total: R$ {(item.convertedPrice * item.quantity).toFixed(2)}
+          </Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.container}>
       <CustomHeader />
-
-      <ScrollView style={styles.container}>
-        {cartItems.length === 0 ? (
-          <Text style={styles.emptyCartText}>Seu carrinho está vazio.</Text>
-        ) : (
+      {cartItems.length === 0 ? (
+        <Text style={styles.empty}>Seu carrinho está vazio.</Text>
+      ) : (
+        <>
           <FlatList
             data={cartItems}
             keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={false}
-            renderItem={({ item }) => (
-              <CartProduct
-                product={item}
-                // Assuming CartProduct has its own logic for removal via useCart
-              />
-            )}
+            renderItem={renderItem}
+            contentContainerStyle={styles.list}
           />
-        )}
-      </ScrollView>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <View>
-          <Text style={styles.footerText}>Total de itens: {totalItems}</Text>
-          <Text style={styles.footerValue}>Valor total: R$ {totalPrice.toFixed(2)}</Text>
-        </View>
-        <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
-          <Text style={styles.buyButtonText}>Comprar</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.footer}>
+            <Text style={styles.total}>Total Geral: R$ {total.toFixed(2)}</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleFinishOrder}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Finalizar Pedido</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#fffff',
-  },
   container: {
     flex: 1,
-    paddingHorizontal: 10,
+   
+    backgroundColor: "#f8f9fc",
   },
-  emptyCartText: {
-    textAlign: 'center',
-    marginTop: 50,
-    fontSize: 18,
-    fontFamily: 'Lora_600SemiBold',
-    color: '#6c757d',
-  },
-  footer: {
-    backgroundColor: '#2b3e50',
-    height: 100,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#34495e',
-  },
-  footerText: {
-    color: '#ECF0F1',
-    fontFamily: 'Lora_400Regular',
+  empty: {
     fontSize: 16,
+    textAlign: "center",
+    marginTop: 32,
+    color: "#6c757d",
   },
-  footerValue: {
-    color: '#FFFFFF',
-    fontFamily: 'Lora_700Bold',
-    fontSize: 18,
-    marginTop: 4,
+  list: {
+    paddingBottom: 16,
   },
-  buyButton: {
-    backgroundColor: '#b0d4f1',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 12,
-  },
-  buyButtonText: {
-    color: '#2b3e50',
-    fontFamily: 'Lora_700Bold',
-    fontSize: 16,
-  },
-  // Re-add other styles if they were removed
-  productCard: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginVertical: 5,
+  item: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
     borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 2,
   },
-  productDetails: {
+  productImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginRight: 12,
+    backgroundColor: "#e9ecef",
+  },
+  details: {
     flex: 1,
-    marginLeft: 10,
+    justifyContent: "space-between",
   },
-  productTitle: {
-    fontWeight: 'bold',
+  description: {
     fontSize: 16,
+    fontWeight: "bold",
+    color: "#343a40",
   },
-  productSubtitle: {
-    fontSize: 12,
-    color: '#555',
-    marginVertical: 4,
+  brand: {
+    fontSize: 14,
+    color: "#6c757d",
+    marginBottom: 4,
   },
-  productPrice: {
+  priceUnit: {
+    fontSize: 14,
+    color: "#495057",
+  },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
+  quantityControls: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  quantityText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    marginHorizontal: 8,
+    color: "#495057",
+  },
+  iconButton: {},
+  totalItemPrice: {
+    marginTop: 4,
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#4e73df",
+  },
+  footer: {
+    borderTopWidth: 1,
+    borderTopColor: "#dee2e6",
+    paddingTop: 16,
+  },
+  total: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 12,
+    textAlign: "right",
+    color: "#343a40",
+  },
+  button: {
+    backgroundColor: "#4e73df",
+    paddingVertical: 14,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "700",
+    textAlign: "center",
+    fontSize: 16,
   },
 });

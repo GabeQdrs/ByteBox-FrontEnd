@@ -1,200 +1,188 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   Image,
+  StyleSheet,
   TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
-import * as SplashScreen from 'expo-splash-screen';
-import CustomHeader from '../components/CustomHeader';
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 
-SplashScreen.preventAutoHideAsync();
+const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg");
 
-const OrderConfirmationScreen = () => {
+export default function OrderConfirmationScreen() {
   const route = useRoute();
   const navigation = useNavigation();
+
   const { order } = route.params;
 
-  const [fontsLoaded, fontError] = useFonts({
-    Lora_400Regular,
-    Lora_600SemiBold,
-    Lora_700Bold,
-  });
-
-  React.useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
+  const formatPrice = (price) => {
+    if (typeof price !== "number" || isNaN(price) || price <= 0) {
+      return "R$ 0,00";
     }
-  }, [fontsLoaded, fontError]);
-
-  const formatDate = (isoDate) => {
-    if (!isoDate) return 'Data indisponível';
-    const date = new Date(isoDate);
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    return price.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
     });
   };
 
-  const formatPrice = (price) => {
-    if (typeof price !== 'number' || isNaN(price)) {
-      return 'R$ 0,00';
-    }
-    return `R$ ${price.toFixed(2).replace('.', ',')}`;
+  const isValidImageUrl = (url) => {
+    return typeof url === "string" && url.trim() !== "" && url !== "string";
   };
 
-  const renderOrderItem = ({ item }) => (
-    <View style={styles.productCard}>
-      <Image
-        source={{ uri: item.imageUrl || 'https://placehold.co/130x150' }}
-        style={styles.productImage}
-      />
-      <View style={styles.productDetails}>
-        <Text style={styles.productTitle}>{item.theme || 'Produto sem nome'}</Text>
-        <Text style={styles.productPrice}>{formatPrice(item.convertedPrice)}</Text>
-      </View>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    const product = item.product || {};
+    const imageSource = isValidImageUrl(product.imageUrl)
+      ? { uri: product.imageUrl }
+      : DEFAULT_IMAGE;
 
-  if (!fontsLoaded && !fontError) {
-    return null; 
-  }
+    const unitPrice =
+      item.convertedPriceAtPruchase > 0
+        ? item.convertedPriceAtPruchase
+        : item.priceAtPurchase;
+
+    return (
+      <View style={styles.item}>
+        <Image source={imageSource} style={styles.productImage} />
+
+        <View style={styles.details}>
+          <Text style={styles.description}>
+            {product.description || "Sem descrição"}
+          </Text>
+          <Text style={styles.brand}>
+            {product.brand || "Marca desconhecida"}
+          </Text>
+          <Text style={styles.quantity}>Quantidade: {item.quantity ?? 0}</Text>
+          <Text style={styles.price}>
+            Preço unitário: {formatPrice(unitPrice)}
+          </Text>
+          <Text style={styles.totalPrice}>
+            Total: {formatPrice(unitPrice * (item.quantity ?? 0))}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  const totalOrderPrice =
+    order.totalConvertedPrice > 0
+      ? order.totalConvertedPrice
+      : order.totalPrice;
 
   return (
-    <View style={styles.wrapper}>
-      <CustomHeader />
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.confirmationTitle}>Pedido Confirmado!</Text>
-        <View style={styles.orderDetailsContainer}>
-          <Text style={styles.detailText}>
-            <Text style={styles.detailLabel}>Número do Pedido:</Text> {order.id}
-          </Text>
-          <Text style={styles.detailText}>
-            <Text style={styles.detailLabel}>Data do Pedido:</Text> {formatDate(order.orderDate)}
-          </Text>
-        </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Pedido Confirmado!</Text>
+      <Text style={styles.subtitle}>Número do pedido: {order.id}</Text>
+      <Text style={styles.subtitle}>Data: {order.orderDate}</Text>
 
-        <FlatList
-          data={order.items}
-          renderItem={renderOrderItem}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          scrollEnabled={false}
-        />
+      <FlatList
+        data={order.items}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+      />
 
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total do Pedido:</Text>
-          <Text style={styles.totalAmount}>{formatPrice(order.totalConvertedPrice)}</Text>
-        </View>
+      <Text style={styles.total}>
+        Total do Pedido: {formatPrice(totalOrderPrice)}
+      </Text>
 
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => navigation.navigate('Home')}
-        >
-          <Text style={styles.homeButtonText}>Voltar para a Home</Text>
-        </TouchableOpacity>
-      </ScrollView>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("AppTabs")} // Changed this line
+      >
+        <Text style={styles.buttonText}>Voltar para a Home</Text>
+      </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#ECF0F1',
-  },
   container: {
+    flex: 1,
     padding: 16,
+    backgroundColor: "#f8f9fc",
   },
-  confirmationTitle: {
-    fontFamily: 'Lora_700Bold',
-    fontSize: 26,
-    color: '#2b3e50',
-    textAlign: 'center',
-    marginBottom: 20,
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#28a745",
+    marginBottom: 8,
   },
-  orderDetailsContainer: {
-    backgroundColor: '#FFFFFF',
-    padding: 15,
-    borderRadius: 20,
-    marginBottom: 16,
+  subtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "#6c757d",
+    marginBottom: 4,
   },
-  detailText: {
-    fontFamily: 'Lora_400Regular',
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 5,
+  list: {
+    paddingVertical: 16,
   },
-  detailLabel: {
-    fontFamily: 'Lora_600SemiBold',
-    color: '#2b3e50',
-  },
-  productCard: {
-    flexDirection: 'row',
-    backgroundColor: '#A9CCE3',
-    marginVertical: 8,
+  item: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
     borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   productImage: {
-    width: 100,
-    height: 120,
+    width: 80,
+    height: 80,
     borderRadius: 8,
+    marginRight: 12,
+    backgroundColor: "#e9ecef",
   },
-  productDetails: {
+  details: {
     flex: 1,
-    marginLeft: 15,
-    justifyContent: 'center',
+    justifyContent: "space-between",
   },
-  productTitle: {
-    fontFamily: 'Lora_600SemiBold',
-    fontSize: 18,
-    color: '#333',
-  },
-  productPrice: {
-    fontFamily: 'Lora_600SemiBold',
+  description: {
     fontSize: 16,
-    color: '#2b3e50',
-    marginTop: 8,
+    fontWeight: "bold",
+    color: "#343a40",
   },
-  totalContainer: {
-    marginTop: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  brand: {
+    fontSize: 14,
+    color: "#6c757d",
+    marginBottom: 4,
   },
-  totalText: {
-    fontFamily: 'Lora_600SemiBold',
+  quantity: {
+    fontSize: 14,
+    color: "#495057",
+  },
+  price: {
+    fontSize: 14,
+    color: "#495057",
+  },
+  totalPrice: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#212529",
+    marginTop: 2,
+  },
+  total: {
     fontSize: 18,
-    color: '#2b3e50',
+    fontWeight: "bold",
+    textAlign: "right",
+    color: "#343a40",
+    marginTop: 16,
   },
-  totalAmount: {
-    fontFamily: 'Lora_700Bold',
-    fontSize: 20,
-    color: '#2b3e50',
+  button: {
+    backgroundColor: "#4e73df",
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginTop: 20,
   },
-  homeButton: {
-    backgroundColor: '#4e73df',
-    paddingVertical: 15,
-    borderRadius: 12,
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  homeButtonText: {
-    color: '#FFFFFF',
-    fontFamily: 'Lora_700Bold',
+  buttonText: {
+    color: "#fff",
+    fontWeight: "700",
+    textAlign: "center",
     fontSize: 16,
   },
 });
-
-export default OrderConfirmationScreen;

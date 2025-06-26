@@ -4,7 +4,7 @@ import Routes from './src/routes/routes';
 import CartProvider from './src/contexts/CartContext';
 import AuthProvider from './src/contexts/AuthContext';
 import FavoritesProvider from './src/contexts/FavoritesContext';
-import { OrdersProvider } from './src/contexts/OrdersContext'; // ✅ Importado aqui
+
 
 export default function App() {
   return (
@@ -12,11 +12,11 @@ export default function App() {
       <FavoritesProvider>
         <CartProvider>
           <CurrencyProvider>
-            <OrdersProvider> 
+            
               <NavigationContainer>
                 <Routes />
               </NavigationContainer>
-            </OrdersProvider>
+            
           </CurrencyProvider>
         </CartProvider>
       </FavoritesProvider>
