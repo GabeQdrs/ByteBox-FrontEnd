@@ -62,6 +62,7 @@ export default function App({ navigation}) {
             }
           />
         )}
+        onEndReachedThreshold={0.3}
       />
       </ScrollView>
 

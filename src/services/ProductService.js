@@ -2,7 +2,14 @@ import api from "./api";
 
 export async function getProducts(currency) {
     try {
-        const response = await api.get(`products/${currency}`)
+        const response = await api.get(`products/${currency}`,{
+
+        params: {
+          size: 10,
+          page: 0.3,
+        },
+      },
+      )
         return response.data.content;
     } catch (error) {
       console.log("Erro ao buscar produto" + error);
