@@ -1,7 +1,7 @@
  
 
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createOrder } from "../services/OrderService";
 
 import CustomHeader from '../components/CustomHeader';
+import CurrencyContext from "../contexts/CurrencyContext";
 
 const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg"); 
 
@@ -29,7 +30,7 @@ export default function CartScreen() {
     clearCart,
     removeFromCart,
   } = useCart();
-
+  const {currency} = useContext(CurrencyContext);
   const { token } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -76,6 +77,15 @@ export default function CartScreen() {
     ]);
   };
 
+  let coin;
+  if (currency === 'USD') {
+    coin = 'US$ ';
+  } else if (currency === 'EUR') {
+    coin = '€ ';
+  } else {
+    coin = 'R$ ';
+  };
+
   const renderItem = ({ item }) => {
     const imageSource =
       item.imageUrl && item.imageUrl.trim() !== ""
@@ -87,16 +97,16 @@ export default function CartScreen() {
         <Image source={imageSource} style={styles.productImage} />
 
         <View style={styles.productDetails}>
-          <Text style={styles.productTitle}>{item.theme || item.brand || 'Nome do Produto'}</Text>
+          <Text style={styles.productTitle}>{item.theme}</Text>
           
           <Text style={styles.productSubtitle}>   </Text>
           
           <Text style={styles.priceUnit}>
-            Preço unitário: R$ {item.price.toFixed(2)}
+            Preço unitário: {coin} {item.price.toFixed(2)}
           </Text>
 
           <Text style={styles.productPrice}>
-            Total: R$ {(item.convertedPrice * item.quantity).toFixed(2)}
+            Total: {coin} {(item.convertedPrice * item.quantity).toFixed(2)}
           </Text>
         </View>
 
@@ -125,7 +135,7 @@ export default function CartScreen() {
           />
 
           <View style={styles.footer}>
-            <Text style={styles.total}>Total Geral: R$ {total.toFixed(2)}</Text>
+            <Text style={styles.total}>Total Geral: {coin} {total.toFixed(2)}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={handleFinishOrder}

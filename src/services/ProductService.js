@@ -17,6 +17,18 @@ export async function getProducts(currency) {
     }
 }
 
+export async function getProductById(id, targetCurrency = "BRL") {
+  try {
+    const response = await api.get(`/products/${id}/${targetCurrency}`);
+    console.log(response.data);
+    return {
+      product: response.data
+    };
+  } catch (error) {
+    return "Erro ao buscar o produto";
+  }
+}
+
 export async function getSearchProducts(searchInput,currency) {
   try {
     const response = await api.get(`products/search/${searchInput}/${currency}`);

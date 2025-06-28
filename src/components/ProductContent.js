@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native'
-import { deleteProduct, setFavorite } from '../services/ProductService';
+import { deleteProduct, getProductById, setFavorite } from '../services/ProductService';
 import { useEffect, useState, useContext } from 'react';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,22 +21,39 @@ const ProductContent = ({ product }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const {token, user} = useAuth();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(product);
+
 
   const [loaded, error] = useFonts({
     Lora_400Regular,
     Lora_600SemiBold,
     Lora_700Bold
   });
+  
+  const fetchProductById = async () => {
+    try {
+      setLoading(true);
+      const data = await getProductById(product.id, currency);
+      setCurrentProduct(data.product);
+    } catch(error) {
+      Alert.alert("Erro", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+    fetchProductById();
+  }, [loaded, error, currency]);
 
   if (!loaded && !error) {
     return null;
   }
+
 
   const changeFavorite = () => {
     try {
@@ -54,14 +71,14 @@ const ProductContent = ({ product }) => {
   const handleEdit = async () => {
     navigation.navigate('AppTabs', {       
     screen: 'Formulario',             
-    params: { product: product }     
+    params: { product }     
   });
   };
 
   const handleDelete = async () => {
     Alert.alert(
       "Confirmar Exclusão",
-      `Tem certeza que deseja excluir o produto "${product.theme}"?`,
+      `Tem certeza que deseja excluir o produto "${currentProduct.theme}"?`,
       [
         {
           text: "Cancelar",
@@ -71,7 +88,7 @@ const ProductContent = ({ product }) => {
           text: "Sim, Excluir",
           onPress: async () => {
             try {
-              await deleteProduct(product.id, token);
+              await deleteProduct(currentProduct.id, token);
               Alert.alert("Sucesso", "Produto excluído com sucesso");
               navigation.goBack();
             } catch (error) {
@@ -92,7 +109,7 @@ const ProductContent = ({ product }) => {
     coin = '€ ';
   } else {
     coin = 'R$ ';
-  }
+  };
 
   return (
     <ScrollView
@@ -103,12 +120,12 @@ const ProductContent = ({ product }) => {
         paddingHorizontal: 20,
       }}
     >
-      <Image source={{ uri: product.imageUrl }} style={styles.image} />
+      <Image source={{ uri: currentProduct.imageUrl }} style={styles.image} />
 
       <View style={styles.info}>
         <View>
-          <Text style={styles.text}>Categoria: {product.category}</Text>
-          <Text style={styles.text}>Em estoque: {product.stock}</Text>
+          <Text style={styles.text}>Categoria: {currentProduct.category}</Text>
+          <Text style={styles.text}>Em estoque: {currentProduct.stock}</Text>
           
           
         </View>
@@ -125,7 +142,7 @@ const ProductContent = ({ product }) => {
       ) : (
         <TouchableOpacity onPress={changeFavorite}>
           <Image
-            source={isFavorite(product.id) ? favoriteTrue : favoriteFalse}
+            source={isFavorite(currentProduct.id) ? favoriteTrue : favoriteFalse}
             style={styles.favoriteIcon}
           />
         </TouchableOpacity>
@@ -133,7 +150,7 @@ const ProductContent = ({ product }) => {
 
       </View>
 
-      <Text style={styles.price}>{coin}{product.convertedPrice.toFixed(2)}</Text>
+      <Text style={styles.price}>{coin}{currentProduct.convertedPrice.toFixed(2)}</Text>
 
       <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
         <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
@@ -145,7 +162,7 @@ const ProductContent = ({ product }) => {
 
       <View style={styles.descriptionContainer}>
         <Text style={styles.descriptionTitle}>Descrição:</Text>
-        <Text style={styles.text}>{product.description}</Text>
+        <Text style={styles.text}>{currentProduct.description}</Text>
       </View>
     </ScrollView>
   )

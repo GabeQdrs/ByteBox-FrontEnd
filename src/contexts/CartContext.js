@@ -1,9 +1,47 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import CurrencyContext from './CurrencyContext'; 
+import { getProductById } from '../services/ProductService'; 
+
 
 const CartContext = createContext();
 
 export default function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
+    const { currency } = useContext(CurrencyContext);
+
+    const updateCartPrices = async () => {
+        if (cartItems.length === 0) {
+        return;
+        }
+
+        console.log(`Moeda mudou para ${currency}. Atualizando preços do carrinho...`);
+
+        try {
+            const updatePromises = cartItems.map(item => getProductById(item.id, currency));
+            const updatedProductsData = await Promise.all(updatePromises);
+
+            const newCartItems = cartItems.map(oldItem => {
+                const updatedProductResponse = updatedProductsData.find(
+                    p => p.product.id === oldItem.id
+                );
+                if (updatedProductResponse && updatedProductResponse.product) {
+                    return {
+                    ...updatedProductResponse.product, 
+                    quantity: oldItem.quantity, 
+                    };
+                }
+                return oldItem;
+            });
+        setCartItems(newCartItems);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        updateCartPrices();
+    }, [currency]);
+
 
     function addToCart( product, quantity = 1) {
         setCartItems((currentItems) => {

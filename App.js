@@ -10,15 +10,15 @@ export default function App() {
   return (
     <AuthProvider>
       <FavoritesProvider>
-        <CartProvider>
-          <CurrencyProvider>
+        <CurrencyProvider>
+          <CartProvider>
             
               <NavigationContainer>
                 <Routes />
               </NavigationContainer>
             
-          </CurrencyProvider>
-        </CartProvider>
+          </CartProvider>
+        </CurrencyProvider>
       </FavoritesProvider>
     </AuthProvider>
   );

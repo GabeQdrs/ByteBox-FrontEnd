@@ -39,13 +39,14 @@ export default function ProductFormScreen({ navigation, route }) {
       
   useEffect(() => {
     if (existingProduct) {
+      console.log(existingProduct);
       setTheme(existingProduct.theme || "");
-      setQuantity(existingProduct.quantity || "");
+      setQuantity(existingProduct.quantity?.toString() || "");
       setDescription(existingProduct.description || "");
       setCategory(existingProduct.category || "");
-      setPrice(existingProduct.price || "");
+      setPrice(existingProduct.convertedPrice?.toString() || "");
       setCurrency(existingProduct.currency || "");
-      setStock(existingProduct.stock || "");
+      setStock(existingProduct.stock?.toString() || "");
       setImage(
         existingProduct.imageUrl ? { uri: existingProduct.imageUrl } : null
       );
