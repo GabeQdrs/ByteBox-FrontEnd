@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
@@ -94,12 +96,12 @@ const styles = StyleSheet.create({
     borderColor: '#ECF0F1',
   },
   claimedCouponContainer: {
-    backgroundColor: '#F0F0F0', // Cor mais clara para indicar inatividade/resgatado
-    borderColor: '#A9A9A9', // Borda cinza
-    borderWidth: 1, // Borda mais fina
-    elevation: 2, // Sombra menos proeminente
+    backgroundColor: '#A9CCE3', 
+    borderColor: '#A9A9A9', 
+    borderWidth: 1, 
+    elevation: 2, 
     shadowOpacity: 0.05,
-    opacity: 0.7, // Torna o cupom ligeiramente transparente
+    opacity: 0.7, 
   },
   left: {
     flex: 1,

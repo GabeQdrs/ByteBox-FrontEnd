@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -6,10 +7,13 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect, useRoute } from "@react-navigation/native";
 import { useAuth } from "../contexts/AuthContext";
 import { getOrders } from "../services/OrderService";
+
+const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg");
 
 export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
@@ -20,6 +24,7 @@ export default function OrdersScreen() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const navigation = useNavigation();
+  const route = useRoute();
   const { token } = useAuth();
 
   const fetchOrders = async (pageToLoad = 0, append = false) => {
@@ -55,8 +60,41 @@ export default function OrdersScreen() {
     useCallback(() => {
       setPage(0);
       fetchOrders(0, false);
-    }, [token])
+
+      if (route.params?.newOrderImage && route.params?.newOrderDescription && route.params?.newOrderId) {
+        const { newOrderImage, newOrderDescription, newOrderId } = route.params;
+
+        const tempNewOrder = {
+          id: newOrderId,
+          orderDate: new Date().toISOString(),
+          totalConvertedPrice: 0,
+          items: [
+            {
+              product: {
+                imageUrl: newOrderImage.uri,
+                description: newOrderDescription,
+              },
+            },
+          ],
+          isTemp: true,
+        };
+
+        setOrders(prevOrders => {
+          const existingOrderIndex = prevOrders.findIndex(order => order.id === newOrderId);
+          if (existingOrderIndex > -1) {
+            const updatedOrders = [...prevOrders];
+            updatedOrders[existingOrderIndex] = { ...updatedOrders[existingOrderIndex], isTemp: false };
+            return updatedOrders;
+          } else {
+            return [tempNewOrder, ...prevOrders];
+          }
+        });
+
+        navigation.setParams({ newOrderImage: undefined, newOrderDescription: undefined, newOrderId: undefined });
+      }
+    }, [token, route.params])
   );
+
 
   const handleLoadMore = () => {
     if (!loadingMore && hasMore && !refreshing) {
@@ -81,21 +119,61 @@ export default function OrdersScreen() {
     });
   };
 
-  const renderOrder = ({ item }) => (
-    <TouchableOpacity
-      style={styles.orderCard}
-      onPress={() => navigation.navigate("OrderDetailScreen", { order: item })}
-    >
-      <Text style={styles.orderId}>Pedido #{item.id}</Text>
-      <Text style={styles.orderDate}>Data: {formatDate(item.orderDate)}</Text>
-      <Text style={styles.orderTotal}>
-        Total: R$ {item.totalConvertedPrice.toFixed(2)}
-      </Text>
-      <Text style={styles.orderItems}>
-        Itens: {item.items ? item.items.length : 0}
-      </Text>
-    </TouchableOpacity>
-  );
+  const isValidImageUrl = (url) => {
+    return typeof url === "string" && url.trim() !== "" && url !== "string";
+  };
+
+  const renderOrder = ({ item }) => {
+    const imagesToDisplay = item.items
+      ? item.items
+          .filter(orderItem => isValidImageUrl(orderItem.product?.imageUrl))
+          .slice(0, 3) // Display up to 3 images to avoid clutter
+      : [];
+
+    const description = item.items && item.items.length > 0
+      ? item.items[0].product?.description || "Itens variados"
+      : "Itens variados";
+
+
+    return (
+      <TouchableOpacity
+        style={styles.orderCard}
+        onPress={() => navigation.navigate("OrderDetailScreen", { order: item })}
+      >
+        <View style={styles.orderHeader}>
+          {imagesToDisplay.length > 0 ? (
+            <View style={styles.imageGallery}>
+              {imagesToDisplay.map((orderItem, index) => (
+                <Image
+                  key={`${item.id}-${orderItem.product.id}-${index}`}
+                  source={{ uri: orderItem.product.imageUrl }}
+                  style={styles.orderImage}
+                />
+              ))}
+              {item.items.length > 3 && (
+                <View style={styles.moreImagesOverlay}>
+                  <Text style={styles.moreImagesText}>+{item.items.length - 3}</Text>
+                </View>
+              )}
+            </View>
+          ) : (
+            <Image source={DEFAULT_IMAGE} style={styles.orderImage} />
+          )}
+          <View style={styles.orderSummary}>
+            <Text style={styles.orderId}>Pedido #{item.id}</Text>
+            <Text style={styles.orderDescription}>{description}</Text>
+          </View>
+        </View>
+        <Text style={styles.orderDate}>Data: {formatDate(item.orderDate)}</Text>
+        <Text style={styles.orderTotal}>
+          Total: R$ {item.totalConvertedPrice.toFixed(2)}
+        </Text>
+        <Text style={styles.orderItems}>
+          Itens: {item.items ? item.items.length : 0}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   const renderFooter = () =>
     loadingMore ? (
@@ -166,13 +244,51 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    height: 300,
+  },
+  orderHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  imageGallery: {
+    flexDirection: "row",
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  orderImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 5, // Small margin between images
+    backgroundColor: "#e9ecef",
+  },
+  moreImagesOverlay: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute', // Position over the last image
+    right: 0,
+  },
+  moreImagesText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  orderSummary: {
+    flex: 1,
   },
   orderId: {
     fontWeight: "bold",
     fontSize: 16,
     marginBottom: 4,
     color: "#343a40",
+  },
+  orderDescription: {
+    fontSize: 14,
+    color: "#495057",
   },
   orderDate: {
     fontSize: 14,

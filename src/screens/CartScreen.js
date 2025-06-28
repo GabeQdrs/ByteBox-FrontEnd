@@ -1,3 +1,6 @@
+ 
+
+
 import React, { useState } from "react";
 import {
   View,
@@ -86,7 +89,7 @@ export default function CartScreen() {
         <View style={styles.productDetails}>
           <Text style={styles.productTitle}>{item.theme || item.brand || 'Nome do Produto'}</Text>
           
-          <Text style={styles.productSubtitle}>Quantidade: {item.quantity}</Text>
+          <Text style={styles.productSubtitle}>   </Text>
           
           <Text style={styles.priceUnit}>
             Preço unitário: R$ {item.price.toFixed(2)}
