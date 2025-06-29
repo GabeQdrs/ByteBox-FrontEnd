@@ -99,14 +99,10 @@ export default function CartScreen() {
         <View style={styles.productDetails}>
           <Text style={styles.productTitle}>{item.theme}</Text>
           
-          <Text style={styles.productSubtitle}>   </Text>
+          <Text style={styles.productSubtitle}>Livros incluso: {item.quantity}</Text>
           
-          <Text style={styles.priceUnit}>
-            Preço unitário: {coin} {item.price.toFixed(2)}
-          </Text>
-
           <Text style={styles.productPrice}>
-            Total: {coin} {(item.convertedPrice * item.quantity).toFixed(2)}
+            Total: {coin}{(item.convertedPrice * item.quantity).toFixed(2)}
           </Text>
         </View>
 
@@ -135,7 +131,7 @@ export default function CartScreen() {
           />
 
           <View style={styles.footer}>
-            <Text style={styles.total}>Total Geral: {coin} {total.toFixed(2)}</Text>
+            <Text style={styles.total}>Total Geral: {coin}{total.toFixed(2)}</Text>
             <TouchableOpacity
               style={styles.button}
               onPress={handleFinishOrder}

@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useFonts, Lora_400Regular, Lora_600SemiBold, Lora_700Bold } from '@expo-google-fonts/lora';
 import * as SplashScreen from 'expo-splash-screen';
+import CurrencyContext from '../contexts/CurrencyContext';
 
 SplashScreen.preventAutoHideAsync();
 
 const FavoriteItem = ({ item }) => {
   const { isFavorite, toggleFavorite, removeFavorite } = useFavorites();
+  const {currency} = useContext(CurrencyContext);
   
 
   const favorited = isFavorite(item.id);
@@ -37,6 +39,15 @@ const FavoriteItem = ({ item }) => {
     }
   };
 
+  let coin;
+  if (currency === 'USD') {
+    coin = 'US$ ';
+  } else if (currency === 'EUR') {
+    coin = '€ ';
+  } else {
+    coin = 'R$ ';
+  };
+
   return (
     <View style={styles.productCard}>
       {/* IMAGEM */}
@@ -45,7 +56,7 @@ const FavoriteItem = ({ item }) => {
       <View style={styles.productDetails}>
         <Text style={styles.productTitle}>{item.theme}</Text>
         <Text style={styles.productSubtitle}>Livros incluso: {item.quantity}</Text>
-        <Text style={styles.productPrice}>R$ {item.price.toFixed(2)}</Text>
+        <Text style={styles.productPrice}>{coin}{item.convertedPrice.toFixed(2)}</Text>
       </View>
 
       {/* CORAÇÃO */}
