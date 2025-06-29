@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
@@ -11,22 +9,19 @@ const couponsData = [
 ];
 
 export default function CouponsScreen() {
-  // Estado para armazenar os IDs dos cupons que foram resgatados.
-  // Um objeto é usado para permitir múltiplos cupons resgatados.
+  
   const [claimedCoupons, setClaimedCoupons] = useState({});
 
-  // Lida com o clique em um cupom.
-  // Se o cupom ainda não foi resgatado, ele é marcado como resgatado.
-  // Se já foi resgatado, nenhuma ação é tomada.
+  
   const handlePress = (id) => {
     setClaimedCoupons(prev => {
-      if (!prev[id]) { // Verifica se o cupom não está resgatado
+      if (!prev[id]) {
         return {
           ...prev,
-          [id]: true // Marca o cupom como resgatado
+          [id]: true 
         };
       }
-      return prev; // Retorna o estado anterior se já estiver resgatado
+      return prev; 
     });
   };
 
@@ -80,7 +75,7 @@ const styles = StyleSheet.create({
   },
   couponContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#A9CCE3',
     borderRadius: 12,
     marginBottom: 15,
     overflow: 'hidden',
