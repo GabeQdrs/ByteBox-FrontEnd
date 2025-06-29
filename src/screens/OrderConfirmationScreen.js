@@ -16,20 +16,36 @@ export default function OrderConfirmationScreen() {
   const route = useRoute();
   const navigation = useNavigation();
 
-  // Destructure 'coin' from route.params
-  const { order, coin } = route.params;
+  const { order } = route.params || {};
+
+  if (!order || !order.items || order.items.length === 0) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
+          Ops! Não foi possível carregar os detalhes do pedido.
+        </Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Voltar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const formatPrice = (price) => {
     if (typeof price !== "number" || isNaN(price) || price <= 0) {
-      // Use the received 'coin' parameter
-      return `${coin || 'R$ '}0,00`; 
+      return "R$ 0,00";
     }
-    // Use the received 'coin' parameter
-    return `${coin || 'R$ '} ${price.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`; 
+    return price.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   };
 
   const isValidImageUrl = (url) => {
-    return typeof url === "string" && url.trim() !== "" && url !== "string";
+    return typeof url === "string" && url.trim() !== "";
   };
 
   const renderItem = ({ item }) => {
@@ -39,8 +55,8 @@ export default function OrderConfirmationScreen() {
       : DEFAULT_IMAGE;
 
     const unitPrice =
-      item.convertedPriceAtPruchase > 0
-        ? item.convertedPriceAtPruchase
+      item.convertedPriceAtPurchase > 0
+        ? item.convertedPriceAtPurchase
         : item.priceAtPurchase;
 
     return (
@@ -52,7 +68,9 @@ export default function OrderConfirmationScreen() {
             {product.theme || product.brand || "Nome do Produto"}
           </Text>
 
-          <Text style={styles.productSubtitle}> </Text>
+          <Text style={styles.productSubtitle}>
+            {product.author || product.genre || "Informações adicionais"}
+          </Text>
 
           <Text style={styles.priceUnit}>
             Preço unitário: {formatPrice(unitPrice)}
@@ -89,7 +107,7 @@ export default function OrderConfirmationScreen() {
 
       <FlatList
         data={order.items}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
       />
@@ -124,7 +142,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECF0F1",
   },
-
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#ECF0F1",
+  },
+  errorText: {
+    fontSize: 18,
+    textAlign: "center",
+    color: "#D9534F",
+    marginBottom: 20,
+    fontFamily: "Lora_600SemiBold",
+  },
   orderSummaryContainer: {
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -133,22 +164,19 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: '#2b3e50', // Added border color for consistency
+    borderBottomColor: "#2b3e50",
   },
   title: {
     fontSize: 24,
-    
     textAlign: "center",
     color: "#28a745",
     marginBottom: 8,
     fontFamily: "Lora_600SemiBold",
   },
   list: {
-    paddingBottom: 16, 
-    paddingHorizontal: 10, 
+    paddingBottom: 16,
+    paddingHorizontal: 10,
   },
-
-  
   productCard: {
     flexDirection: "row",
     borderRadius: 10,
@@ -158,7 +186,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 12,
     backgroundColor: "#ECF0F1",
-    marginHorizontal: 10, // Added horizontal margin
+    marginHorizontal: 10,
   },
   productImage: {
     width: "30%",
@@ -203,23 +231,21 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderColor: '#e0e0e0',
-    alignItems: 'flex-start',
+    borderColor: "#e0e0e0",
+    alignItems: "flex-start",
   },
   total: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "right",
     color: "#343a40",
     marginBottom: 12,
-    
   },
   button: {
     backgroundColor: "#2b3e50",
     paddingVertical: 14,
     borderRadius: 10,
-    width: '100%',
-    alignSelf: 'center',
+    width: "100%",
+    alignSelf: "center",
   },
   buttonText: {
     color: "#fff",

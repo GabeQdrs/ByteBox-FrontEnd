@@ -11,7 +11,7 @@ export default function CartProvider({ children }) {
 
     const updateCartPrices = async () => {
         if (cartItems.length === 0) {
-        return;
+            return;
         }
 
         console.log(`Moeda mudou para ${currency}. Atualizando preços do carrinho...`);
@@ -26,13 +26,13 @@ export default function CartProvider({ children }) {
                 );
                 if (updatedProductResponse && updatedProductResponse.product) {
                     return {
-                    ...updatedProductResponse.product, 
-                    quantity: oldItem.quantity, 
+                        ...updatedProductResponse.product, 
+                        quantity: oldItem.quantity, 
                     };
                 }
                 return oldItem;
             });
-        setCartItems(newCartItems);
+            setCartItems(newCartItems);
         } catch (error) {
             console.log(error);
         }
@@ -64,15 +64,25 @@ export default function CartProvider({ children }) {
     }
 
     function increaseQuantity(productId) {
-        // FAZER
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+            )
+        );
     }
 
     function decreaseQuantity(productId) {
-        // FAZER
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === productId
+                    ? { ...item, quantity: Math.max(1, item.quantity - 1) } // Ensure quantity doesn't go below 1
+                    : item
+            ).filter(item => item.quantity > 0) // Remove item if quantity becomes 0
+        );
     }
 
     function clearCart() {
-        // FAZER
+        setCartItems([]);
     }
 
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);

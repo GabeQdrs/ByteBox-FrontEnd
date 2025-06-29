@@ -1,3 +1,6 @@
+ 
+
+
 import React, { useContext, useState } from "react";
 import {
   View,
@@ -37,15 +40,6 @@ export default function CartScreen() {
     0
   );
 
-  let coin;
-  if (currency === 'USD') {
-    coin = 'US$ ';
-  } else if (currency === 'EUR') {
-    coin = '€ ';
-  } else {
-    coin = 'R$ ';
-  };
-
   const handleFinishOrder = async () => {
     if (cartItems.length === 0) {
       Alert.alert("Carrinho vazio", "Adicione produtos antes de finalizar.");
@@ -60,8 +54,7 @@ export default function CartScreen() {
 
       clearCart();
 
-      // Pass the 'coin' variable here
-      navigation.navigate("OrderConfirmationScreen", { order, coin });
+      navigation.navigate("OrderConfirmationScreen", { order});
     } catch (error) {
       console.error("Erro ao finalizar o pedido:", error);
       Alert.alert(
@@ -82,6 +75,15 @@ export default function CartScreen() {
         onPress: () => removeFromCart(id),
       },
     ]);
+  };
+
+  let coin;
+  if (currency === 'USD') {
+    coin = 'US$ ';
+  } else if (currency === 'EUR') {
+    coin = '€ ';
+  } else {
+    coin = 'R$ ';
   };
 
   const renderItem = ({ item }) => {
@@ -246,6 +248,6 @@ const styles = StyleSheet.create({
     color: "#ECF0F1",
     fontWeight: "700",
     textAlign: "center",
-    fontSize: 17,
+    fontSize: 16,
   },
 });
