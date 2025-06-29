@@ -16,16 +16,16 @@ export default function OrderConfirmationScreen() {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const { order } = route.params;
+  // Destructure 'coin' from route.params
+  const { order, coin } = route.params;
 
   const formatPrice = (price) => {
     if (typeof price !== "number" || isNaN(price) || price <= 0) {
-      return "R$ 0,00";
+      // Use the received 'coin' parameter
+      return `${coin || 'R$ '}0,00`; 
     }
-    return price.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    // Use the received 'coin' parameter
+    return `${coin || 'R$ '} ${price.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}`; 
   };
 
   const isValidImageUrl = (url) => {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-   
+    
     textAlign: "center",
     color: "#28a745",
     marginBottom: 8,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10, 
   },
 
- 
+  
   productCard: {
     flexDirection: "row",
     borderRadius: 10,
