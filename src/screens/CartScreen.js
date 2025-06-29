@@ -42,39 +42,14 @@ export default function CartScreen() {
     try {
       setLoading(true);
 
-      const orderItems = cartItems.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-        convertedPriceAtPurchase: item.convertedPrice,
-        priceAtPurchase: item.price,
-        product: {
-          id: item.id,
-          theme: item.theme,
-          brand: item.brand,
-          author: item.author,
-          genre: item.genre,
-          imageUrl: item.imageUrl,
-          description: item.description,
-        },
-      }));
-
-      const totalConvertedPrice = orderItems.reduce(
-        (sum, item) => sum + item.convertedPriceAtPurchase * item.quantity,
-        0
-      );
-
-      const response = await createOrder(orderItems, token);
-
-      const order = {
-        id: response.orderId,
-        items: orderItems,
-        totalPrice: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-        totalConvertedPrice: totalConvertedPrice,
-      };
+      const response = await createOrder(cartItems,token);
+      const order = response.order;
+      
+     
 
       clearCart();
 
-      navigation.navigate("OrderConfirmationScreen", { order: order, currency: currency });
+      navigation.navigate("OrderConfirmationScreen", { order, currency });
     } catch (error) {
       console.error("Erro ao finalizar o pedido:", error);
       Alert.alert(
