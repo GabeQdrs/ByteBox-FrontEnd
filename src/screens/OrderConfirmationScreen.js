@@ -88,7 +88,7 @@ export default function OrderConfirmationScreen() {
           </Text>
 
           <Text style={styles.productSubtitle}>
-            {product.author || product.genre || "Informações adicionais"}
+            {product.author || product.genre || "Autor"}
           </Text>
 
           <Text style={styles.priceUnit}>
@@ -255,15 +255,14 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 30,
     paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderColor: "#e0e0e0",
+    
     alignItems: "flex-start",
   },
   total: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#343a40",
+    color: " #2b3e50",
     marginBottom: 12,
+    fontFamily: "Lora_600SemiBold",
   },
   button: {
     backgroundColor: "#2b3e50",
@@ -271,11 +270,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     alignSelf: "center",
+    
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "700",
+    color:"#ECF0F1",
     textAlign: "center",
     fontSize: 16,
+    fontFamily: "Lora_600SemiBold",
   },
 });

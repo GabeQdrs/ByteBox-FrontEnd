@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useContext, useEffect } from 'react';
 import CurrencyContext from '../contexts/CurrencyContext';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,18 +34,15 @@ const ProductHeader = ({ product }) => {
 
   return (
     <View style={styles.container}>
-      {/* Botão de Voltar */}
-      <TouchableOpacity style={styles.backButton} onPress={handleGoHome}>
-        <Text style={styles.backText}>Voltar</Text>
+      <TouchableOpacity style={styles.backArrow} onPress={handleGoHome}>
+        <Ionicons name="arrow-back" size={30} color="#ECF0F1" />
       </TouchableOpacity>
 
-      {/* Título e Subtítulo à direita */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{product.theme}</Text>
         <Text style={styles.quantity}>Livros incluso: {product.quantity}</Text>
       </View>
 
-      {/* Placeholder para manter alinhamento */}
       <View style={styles.placeholder} />
     </View>
   );
@@ -59,36 +57,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  backButton: {
-    backgroundColor: '#A9CCE3',
+  backArrow: {
     paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-  },
-  backText: {
-    color: '#2b3e50',
-    fontSize: 16,
-    fontFamily: 'Lora_600SemiBold',
+    paddingHorizontal: 5, 
   },
   titleContainer: {
     position: 'absolute',
     right: 20,
-    alignItems: 'flex-end', // ✅ Alinha o conteúdo à direita
+    alignItems: 'flex-end',
   },
   title: {
     color: '#ECF0F1',
     fontFamily: 'Lora_700Bold',
     fontSize: 22,
-    textAlign: 'right', // ✅ Texto alinhado à direita
+    textAlign: 'right',
   },
   quantity: {
     color: '#ECF0F1',
     fontFamily: 'Lora_600SemiBold',
     fontSize: 16,
-    textAlign: 'right', // ✅ Texto alinhado à direita
+    textAlign: 'right',
   },
   placeholder: {
-    width: 70, // ✅ Mesmo tamanho do botão para equilíbrio
+    width: 70, 
   },
 });
 

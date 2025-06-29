@@ -250,16 +250,17 @@ const styles = StyleSheet.create({
   },
   total: {
     fontSize: 18,
-    fontWeight: "bold",
     marginBottom: 12,
     textAlign: "left",
     color: "#343a40",
+    fontFamily: "Lora_600SemiBold",
   },
   button: {
     backgroundColor: "#2b3e50",
     paddingVertical: 14,
     borderRadius: 10,
     marginBottom: 15,
+    fontFamily: "Lora_600SemiBold",
   },
   buttonText: {
     color: "#ECF0F1",
