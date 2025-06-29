@@ -1,6 +1,3 @@
- 
-
-
 import React, { useContext, useState } from "react";
 import {
   View,
@@ -18,19 +15,15 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { createOrder } from "../services/OrderService";
 
-import CustomHeader from '../components/CustomHeader';
+import CustomHeader from "../components/CustomHeader";
 import CurrencyContext from "../contexts/CurrencyContext";
 
-const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg"); 
+const DEFAULT_IMAGE = require("../../assets/ImagemLivroTeste.jpg");
 
 export default function CartScreen() {
   const navigation = useNavigation();
-  const {
-    cartItems,
-    clearCart,
-    removeFromCart,
-  } = useCart();
-  const {currency} = useContext(CurrencyContext);
+  const { cartItems, clearCart, removeFromCart } = useCart();
+  const { currency } = useContext(CurrencyContext);
   const { token } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -49,12 +42,39 @@ export default function CartScreen() {
     try {
       setLoading(true);
 
-      const response = await createOrder(cartItems, token);
-      const order = response.order;
+      const orderItems = cartItems.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+        convertedPriceAtPurchase: item.convertedPrice,
+        priceAtPurchase: item.price,
+        product: {
+          id: item.id,
+          theme: item.theme,
+          brand: item.brand,
+          author: item.author,
+          genre: item.genre,
+          imageUrl: item.imageUrl,
+          description: item.description,
+        },
+      }));
+
+      const totalConvertedPrice = orderItems.reduce(
+        (sum, item) => sum + item.convertedPriceAtPurchase * item.quantity,
+        0
+      );
+
+      const response = await createOrder(orderItems, token);
+
+      const order = {
+        id: response.orderId,
+        items: orderItems,
+        totalPrice: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        totalConvertedPrice: totalConvertedPrice,
+      };
 
       clearCart();
 
-      navigation.navigate("OrderConfirmationScreen", { order});
+      navigation.navigate("OrderConfirmationScreen", { order: order, currency: currency });
     } catch (error) {
       console.error("Erro ao finalizar o pedido:", error);
       Alert.alert(
@@ -78,13 +98,13 @@ export default function CartScreen() {
   };
 
   let coin;
-  if (currency === 'USD') {
-    coin = 'US$ ';
-  } else if (currency === 'EUR') {
-    coin = '€ ';
+  if (currency === "USD") {
+    coin = "US$ ";
+  } else if (currency === "EUR") {
+    coin = "€ ";
   } else {
-    coin = 'R$ ';
-  };
+    coin = "R$ ";
+  }
 
   const renderItem = ({ item }) => {
     const imageSource =
@@ -98,9 +118,11 @@ export default function CartScreen() {
 
         <View style={styles.productDetails}>
           <Text style={styles.productTitle}>{item.theme}</Text>
-          
-          <Text style={styles.productSubtitle}>Livros incluso: {item.quantity}</Text>
-          
+
+          <Text style={styles.productSubtitle}>
+            Livros incluso: {item.quantity}
+          </Text>
+
           <Text style={styles.productPrice}>
             Total: {coin}{(item.convertedPrice * item.quantity).toFixed(2)}
           </Text>
@@ -131,7 +153,9 @@ export default function CartScreen() {
           />
 
           <View style={styles.footer}>
-            <Text style={styles.total}>Total Geral: {coin}{total.toFixed(2)}</Text>
+            <Text style={styles.total}>
+              Total Geral: {coin}{total.toFixed(2)}
+            </Text>
             <TouchableOpacity
               style={styles.button}
               onPress={handleFinishOrder}
@@ -165,67 +189,64 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingHorizontal: 10,
   },
-  
+
   productCard: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: '#2b3e50',
+    borderBottomColor: "#2b3e50",
     paddingVertical: 10,
     marginBottom: 12,
-    backgroundColor: '#ECF0F1',
-    
+    backgroundColor: "#ECF0F1",
   },
   productImage: {
     width: "30%",
     height: 120,
     borderRadius: 8,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     marginLeft: 10,
   },
   productDetails: {
     flex: 1,
     marginLeft: 20,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     height: 120,
     paddingVertical: 5,
   },
   productTitle: {
-    color: '#2b3e50',
-    fontFamily: 'Lora_700Bold',
+    color: "#2b3e50",
+    fontFamily: "Lora_700Bold",
     fontSize: 18,
   },
   productSubtitle: {
-    fontFamily: 'Lora_600SemiBold',
+    fontFamily: "Lora_600SemiBold",
     fontSize: 14,
-    color: '#2b3e50',
+    color: "#2b3e50",
     marginTop: 5,
   },
   productPrice: {
-    color: '#2b3e50',
-    fontFamily: 'Lora_600SemiBold',
+    color: "#2b3e50",
+    fontFamily: "Lora_600SemiBold",
     fontSize: 18,
-    marginTop: 'auto',
+    marginTop: "auto",
   },
   priceUnit: {
     fontSize: 14,
-    color: '#2b3e50',
+    color: "#2b3e50",
     marginTop: 5,
-    fontFamily: 'Lora_600SemiBold',
+    fontFamily: "Lora_600SemiBold",
   },
   removeButtonContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginRight: 15,
     marginBottom: 10,
   },
-  
+
   footer: {
-    
     paddingTop: 16,
     paddingHorizontal: 20,
-    backgroundColor: '#A9CCE3',
-    
+    backgroundColor: "#A9CCE3",
   },
   total: {
     fontSize: 18,
@@ -238,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2b3e50",
     paddingVertical: 14,
     borderRadius: 10,
-    marginBottom:15,
+    marginBottom: 15,
   },
   buttonText: {
     color: "#ECF0F1",

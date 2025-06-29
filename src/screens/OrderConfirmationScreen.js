@@ -16,7 +16,7 @@ export default function OrderConfirmationScreen() {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const { order } = route.params || {};
+  const { order, currency } = route.params || {};
 
   if (!order || !order.items || order.items.length === 0) {
     return (
@@ -34,13 +34,26 @@ export default function OrderConfirmationScreen() {
     );
   }
 
-  const formatPrice = (price) => {
-    if (typeof price !== "number" || isNaN(price) || price <= 0) {
+  const formatPrice = (price, currentCurrency) => {
+    if (typeof price !== "number" || isNaN(price)) {
       return "R$ 0,00";
     }
+
+    let currencyCode = "BRL";
+
+    if (currentCurrency === 'USD') {
+      currencyCode = 'USD';
+    } else if (currentCurrency === 'EUR') {
+      currencyCode = 'EUR';
+    } else {
+      currencyCode = 'BRL';
+    }
+
     return price.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     });
   };
 
@@ -55,9 +68,15 @@ export default function OrderConfirmationScreen() {
       : DEFAULT_IMAGE;
 
     const unitPrice =
-      item.convertedPriceAtPurchase > 0
+      typeof item.convertedPriceAtPurchase === "number" &&
+      !isNaN(item.convertedPriceAtPurchase)
         ? item.convertedPriceAtPurchase
-        : item.priceAtPurchase;
+        : typeof item.priceAtPurchase === "number" &&
+          !isNaN(item.priceAtPurchase)
+        ? item.priceAtPurchase
+        : 0;
+
+    const itemTotal = unitPrice * (item.quantity ?? 0);
 
     return (
       <View style={styles.productCard}>
@@ -73,11 +92,11 @@ export default function OrderConfirmationScreen() {
           </Text>
 
           <Text style={styles.priceUnit}>
-            Preço unitário: {formatPrice(unitPrice)}
+            Preço unitário: {formatPrice(unitPrice, currency)}
           </Text>
 
           <Text style={styles.productPrice}>
-            Total: {formatPrice(unitPrice * (item.quantity ?? 0))}
+            Total: {formatPrice(itemTotal, currency)}
           </Text>
         </View>
       </View>
@@ -85,9 +104,12 @@ export default function OrderConfirmationScreen() {
   };
 
   const totalOrderPrice =
-    order.totalConvertedPrice > 0
+    typeof order.totalConvertedPrice === "number" &&
+    !isNaN(order.totalConvertedPrice)
       ? order.totalConvertedPrice
-      : order.totalPrice;
+      : typeof order.totalPrice === "number" && !isNaN(order.totalPrice)
+      ? order.totalPrice
+      : 0;
 
   const firstOrderItem =
     order.items && order.items.length > 0 ? order.items[0] : null;
@@ -95,7 +117,8 @@ export default function OrderConfirmationScreen() {
     firstOrderItem && isValidImageUrl(firstOrderItem.product?.imageUrl)
       ? { uri: firstOrderItem.product.imageUrl }
       : DEFAULT_IMAGE;
-  const orderDescription = firstOrderItem?.product?.description || "Itens variados";
+  const orderDescription =
+    firstOrderItem?.product?.description || "Itens variados";
 
   return (
     <View style={styles.container}>
@@ -107,14 +130,16 @@ export default function OrderConfirmationScreen() {
 
       <FlatList
         data={order.items}
-        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
+        keyExtractor={(item, index) =>
+          item.productId?.toString() || index.toString()
+        }
         renderItem={renderItem}
         contentContainerStyle={styles.list}
       />
 
       <View style={styles.footerContainer}>
         <Text style={styles.total}>
-          Total do Pedido: {formatPrice(totalOrderPrice)}
+          Total do Pedido: {formatPrice(totalOrderPrice, currency)}{" "}
         </Text>
 
         <TouchableOpacity
