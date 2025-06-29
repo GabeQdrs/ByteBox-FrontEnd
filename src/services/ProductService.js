@@ -17,7 +17,7 @@ export async function getProducts(currency) {
     }
 }
 
-export async function getProductById(id, targetCurrency = "BRL") {
+export async function getProductById(id, targetCurrency) {
   try {
     const response = await api.get(`/products/${id}/${targetCurrency}`);
     console.log(response.data);

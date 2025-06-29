@@ -9,8 +9,8 @@ import FavoritesProvider from './src/contexts/FavoritesContext';
 export default function App() {
   return (
     <AuthProvider>
-      <FavoritesProvider>
-        <CurrencyProvider>
+      <CurrencyProvider>
+        <FavoritesProvider>
           <CartProvider>
             
               <NavigationContainer>
@@ -18,8 +18,8 @@ export default function App() {
               </NavigationContainer>
             
           </CartProvider>
-        </CurrencyProvider>
-      </FavoritesProvider>
+        </FavoritesProvider>
+      </CurrencyProvider>
     </AuthProvider>
   );
 }
