@@ -1,18 +1,17 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import ProfileInfo from '../components/ProfileInfo'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomHeader from '../components/CustomHeader'
 import ProfileTabs from '../routes/profileTabs'
 
 
 export default function ProfileScreen() {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <CustomHeader/>
       <ProfileInfo/>
       <ProfileTabs/>
-    </SafeAreaView>
+    </View>
   )
 }
 

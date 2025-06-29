@@ -1,17 +1,64 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import CurrencyContext from "./CurrencyContext";
-import { productService } from '../services/ProductService';
 import { getProductById } from '../services/ProductService'; 
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from './AuthContext';
 
 const FavoritesContext = createContext();
 
 export default function FavoritesProvider({ children }) {
   const [favoriteItems, setFavoriteItems] = useState([]);
   const { currency } = useContext(CurrencyContext);
+  const { user } = useAuth();
 
 // 1. Crie uma referência para controlar se é a primeira renderização
   const isInitialMount = useRef(true);
+
+  // EFEITO 1: Roda quando o usuário muda (login/logout) para CARREGAR os dados.
+  useEffect(() => {
+    async function loadFavoritesData() {
+      if (!user) {
+        setFavoriteItems([]); // Se fez logout, limpa os favoritos da memória
+        return;
+      }
+      
+      const favoritesKey = `@APP_favorites_${user.id}`;
+      try {
+        const savedFavorites = await AsyncStorage.getItem(favoritesKey);
+        if (savedFavorites !== null) {
+          setFavoriteItems(JSON.parse(savedFavorites));
+        } else {
+          setFavoriteItems([]); // Inicia com array vazio se for o primeiro acesso do usuário
+        }
+      } catch (e) {
+        console.error("Falha ao carregar os favoritos do AsyncStorage.", e);
+      }
+    }
+
+    loadFavoritesData();
+  }, [user]); // Dependência: 'user'
+
+  
+  // EFEITO 2: Roda sempre que a lista de favoritos é alterada, para SALVAR os dados.
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return; // Pula a primeira execução
+    }
+
+    async function saveFavoritesData() {
+      if (user) {
+        const favoritesKey = `@APP_favorites_${user.id}`;
+        try {
+          await AsyncStorage.setItem(favoritesKey, JSON.stringify(favoriteItems));
+        } catch (e) {
+          console.error("Falha ao salvar os favoritos no AsyncStorage.", e);
+        }
+      }
+    }
+
+    saveFavoritesData();
+  }, [favoriteItems, user]);
 
 
   // 2. Este useEffect agora contém toda a lógica de atualização

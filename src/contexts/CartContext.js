@@ -1,13 +1,68 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import CurrencyContext from './CurrencyContext'; 
-import { getProductById } from '../services/ProductService'; 
-
+import { getProductById } from '../services/ProductService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from './AuthContext'; 
 
 const CartContext = createContext();
 
 export default function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState([]);
     const { currency } = useContext(CurrencyContext);
+    const { user } = useAuth();
+
+    const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    async function loadCartData() {
+      // Se não há usuário, limpe o carrinho e não faça mais nada
+      if (!user) {
+        setCartItems([]);
+        return;
+      }
+      
+      // Cria uma chave única para o carrinho deste usuário
+      const cartKey = `@APP_cart_${user.id}`;
+      try {
+        const savedCart = await AsyncStorage.getItem(cartKey);
+        if (savedCart !== null) {
+          setCartItems(JSON.parse(savedCart));
+        } else {
+          // Se não houver carrinho salvo para este usuário, comece com um vazio
+          setCartItems([]);
+        }
+      } catch (e) {
+        console.error("Falha ao carregar o carrinho do AsyncStorage.", e);
+      }
+    }
+
+    loadCartData();
+  }, [user]); // Este efeito roda sempre que o 'user' mudar
+
+  
+  // EFEITO 2: Salva os dados no AsyncStorage sempre que o carrinho mudar
+  useEffect(() => {
+    // Pula a primeira execução para não apagar dados salvos com um array vazio
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    async function saveCartData() {
+      // Só salva se houver um usuário logado
+      if (user) {
+        const cartKey = `@APP_cart_${user.id}`;
+        try {
+          await AsyncStorage.setItem(cartKey, JSON.stringify(cartItems));
+        } catch (e) {
+          console.error("Falha ao salvar o carrinho no AsyncStorage.", e);
+        }
+      }
+    }
+
+    saveCartData();
+  }, [cartItems, user]); // Este efeito roda sempre que 'cartItems' ou 'user' mudar
+
 
     const updateCartPrices = async () => {
         if (cartItems.length === 0) {
