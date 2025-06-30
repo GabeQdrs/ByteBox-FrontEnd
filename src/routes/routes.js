@@ -12,9 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import ProductFormScreen from '../screens/ProductFormScreen';
 import OrderConfirmationScreen from '../screens/OrderConfirmationScreen';
-
-
-
+import OrderDetailScreen from '../screens/OrderDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,6 +104,7 @@ export default function Routes() {
         <Stack.Screen name='AppTabs' component={MainAppTabs}/>
         <Stack.Screen name='Produto' component={ProductScreen}/>
         <Stack.Screen name='OrderConfirmationScreen' component={OrderConfirmationScreen}/>
+        <Stack.Screen name='OrderDetailScreen' component={OrderDetailScreen}/>
       </Stack.Navigator>
   )
 }
