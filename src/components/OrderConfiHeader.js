@@ -43,32 +43,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#2C3E50',
     height: 100,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    paddingBlock: 17,
-    paddingHorizontal: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     color: '#ECF0F1',
     fontFamily: 'Lora_600SemiBold',
     fontSize: 24,
   },
-  flag: {
-    borderRadius: 10,
-    width: 40,
-    height: 30,
-  },
-  logoutButtom: {
-      backgroundColor: '#bf3f3f',
-      paddingHorizontal: 15,
-      paddingVertical: 6,
-      borderRadius: 10,
-  },
-  logoutButtomText: {
-    fontFamily: 'Lora_700Bold',
-    color: '#ECF0F1'
-  }
 
 });
 

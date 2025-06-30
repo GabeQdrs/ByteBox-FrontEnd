@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import { getOrders } from "../services/OrderService";
 import OrderItem from "../components/OrderItem";
 // Importe o novo componente OrdersListFooter
 import OrdersListFooter from "../components/OrdersListFooter"; // Ajuste o caminho conforme necessário
+import CurrencyContext from "../contexts/CurrencyContext";
 
 export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
@@ -26,6 +27,7 @@ export default function OrdersScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { token } = useAuth();
+  const {currency} = useContext(CurrencyContext);
 
   const fetchOrders = async (pageToLoad = 0, append = false) => {
     try {
@@ -36,7 +38,7 @@ export default function OrdersScreen() {
         setLoadingMore(true);
       }
 
-      const response = await getOrders(token, "BRL", pageToLoad);
+      const response = await getOrders(token, currency, pageToLoad);
 
       const newOrders = response.orders || [];
 
@@ -92,7 +94,7 @@ export default function OrdersScreen() {
 
         navigation.setParams({ newOrderImage: undefined, newOrderDescription: undefined, newOrderId: undefined });
       }
-    }, [token, route.params])
+    }, [token, route.params, currency])
   );
 
   const handleLoadMore = () => {
@@ -109,10 +111,8 @@ export default function OrdersScreen() {
     fetchOrders(0, false);
   };
 
-  const renderOrder = ({ item }) => <OrderItem item={item} />;
+  const renderOrder = ({ item }) => <OrderItem item={item}/>;
 
-  // O ListFooterComponent agora usa o componente OrdersListFooter
-  // Passamos a prop 'loadingMore' para ele
   const renderFooter = () => <OrdersListFooter loadingMore={loadingMore} />;
 
 
@@ -141,17 +141,21 @@ export default function OrdersScreen() {
   }
 
   return (
-    <FlatList
-      data={orders}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={renderOrder}
-      contentContainerStyle={styles.listContainer}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.3}
-      ListFooterComponent={renderFooter} // Usando o componente OrdersListFooter
-      refreshing={refreshing}
-      onRefresh={handleRefresh}
-    />
+    <View style={{backgroundColor: '#ECF0F1'}}>
+      <FlatList
+        data={orders}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderOrder}
+        contentContainerStyle={styles.listContainer}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={renderFooter} 
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+      />
+    </View>
+      
+      
   );
 }
 
