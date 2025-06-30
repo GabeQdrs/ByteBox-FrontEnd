@@ -5,6 +5,8 @@ import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
+const bannerImg = require('../../assets/bannerSupriseBox.jpg');
+
 const SurpriseBox = () => {
   const [loaded, error] = useFonts ({
         Lora_400Regular,

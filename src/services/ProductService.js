@@ -1,15 +1,16 @@
 import api from "./api";
 
-export async function getProducts(currency) {
+export async function getProducts(token, currency, pageToLoad = 0) {
     try {
-        const response = await api.get(`products/${currency}`,{
-
-        params: {
-          size: 10,
-          page: 0.3,
-        },
+        const response = await api.get(`products/${currency}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      )
+      params: {
+        size: 4,
+        page: pageToLoad,
+      },
+    });
         return response.data.content;
     } catch (error) {
       console.log("Erro ao buscar produto" + error);

@@ -1,38 +1,68 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {View,Text,Image,ScrollView,StyleSheet,TouchableOpacity,Dimensions, FlatList, ActivityIndicator} from 'react-native';
 import ProductCard from '../components/ProductCard';
 import SurpriseBox from '../components/SurpriseBox';
 import CustomHeader from '../components/CustomHeader';
 import { getProducts } from '../services/ProductService';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import CurrencyContext from '../contexts/CurrencyContext';
+import { useAuth } from '../contexts/AuthContext';
 
-
-const { width } = Dimensions.get('window');
 
 export default function App({ navigation}) {
   const { currency, changeCurrency } = useContext(CurrencyContext);
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const isFocused = useIsFocused();
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const {token} = useAuth();
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (pageToLoad = 0, append = false) => {
     try {
-      setLoading(true);
-      const data = await getProducts(currency);
-      setProduct(data);
+      if (pageToLoad === 0 && !append) {
+        setLoading(true);
+      } else if (append) {
+        setLoadingMore(true);
+      }
+
+      const data = await getProducts(token, currency, pageToLoad);
+
+      const newProducts = data || [];
+
+      if (append) {
+        setProduct((prev) => [...prev, ...newProducts]);
+      } else {
+        setProduct(newProducts);
+      }
     } catch (error) {
       setError("Não foi possível carregar os produtos.")
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+      setRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    if (isFocused) {
-      fetchProducts();
+  useFocusEffect(
+    useCallback(() => {
+      setProduct([]);
+      setPage(0);
+      setHasMore(true);
+      fetchProducts(0, false, true); 
+    }, [token, currency])
+  );
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore && !refreshing) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchProducts(nextPage, true);
     }
-  }, [isFocused, currency]);
+  };
+
 
   if (loading) { 
         return <ActivityIndicator size={"large"}/>
@@ -51,7 +81,10 @@ export default function App({ navigation}) {
         data={products}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
+        refreshing={refreshing}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.3}
         renderItem={({item}) => (
           <ProductCard
             product={item}
@@ -62,7 +95,6 @@ export default function App({ navigation}) {
             }
           />
         )}
-        onEndReachedThreshold={0.3}
       />
       </ScrollView>
 
