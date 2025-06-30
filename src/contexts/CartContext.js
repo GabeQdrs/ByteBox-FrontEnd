@@ -21,14 +21,14 @@ export default function CartProvider({ children }) {
         return;
       }
       
-      // Cria uma chave única para o carrinho deste usuário
+      
       const cartKey = `@APP_cart_${user.id}`;
       try {
         const savedCart = await AsyncStorage.getItem(cartKey);
         if (savedCart !== null) {
           setCartItems(JSON.parse(savedCart));
         } else {
-          // Se não houver carrinho salvo para este usuário, comece com um vazio
+          
           setCartItems([]);
         }
       } catch (e) {
@@ -37,19 +37,19 @@ export default function CartProvider({ children }) {
     }
 
     loadCartData();
-  }, [user]); // Este efeito roda sempre que o 'user' mudar
+  }, [user]); 
 
   
-  // EFEITO 2: Salva os dados no AsyncStorage sempre que o carrinho mudar
+ 
   useEffect(() => {
-    // Pula a primeira execução para não apagar dados salvos com um array vazio
+    
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
     async function saveCartData() {
-      // Só salva se houver um usuário logado
+     
       if (user) {
         const cartKey = `@APP_cart_${user.id}`;
         try {
@@ -61,7 +61,7 @@ export default function CartProvider({ children }) {
     }
 
     saveCartData();
-  }, [cartItems, user]); // Este efeito roda sempre que 'cartItems' ou 'user' mudar
+  }, [cartItems, user]); 
 
 
     const updateCartPrices = async () => {
@@ -130,9 +130,9 @@ export default function CartProvider({ children }) {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
                 item.id === productId
-                    ? { ...item, quantity: Math.max(1, item.quantity - 1) } // Ensure quantity doesn't go below 1
+                    ? { ...item, quantity: Math.max(1, item.quantity - 1) }
                     : item
-            ).filter(item => item.quantity > 0) // Remove item if quantity becomes 0
+            ).filter(item => item.quantity > 0) 
         );
     }
 
